@@ -1,12 +1,16 @@
 {
-  "generated_at": "2026-10-15T01:21:54.281057",
-  "pipeline_version": "2.0.0-modular",
-  "public_notes_count": 16,
+  "generated_at": "2026-10-15T02:16:36.113465",
+  "pipeline_version": "3.0.0-hierarchical-deep-study",
+  "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
+  "public_notes_count": 35,
+  "total_tracks_count": 12,
   "private_excluded_count": 2,
-  "total_qna_count": 92,
-  "conferences": [
-    "Samsung AI Forum 2026",
-    "Toss SLASH 26",
-    "if(kakao)26"
-  ]
+  "total_qna_count": 119,
+  "total_char_count": 336763,
+  "avg_char_per_note": 9621,
+  "conferences": {
+    "Toss SLASH 26": 5,
+    "if(kakao)26": 20,
+    "Samsung AI Forum 2026": 10
+  }
 }
