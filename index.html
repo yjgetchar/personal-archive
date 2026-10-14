@@ -3,608 +3,937 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArchiveOS — Personal Knowledge Archive & Tree Wiki</title>
+  <title>ArchiveOS — macOS Knowledge Finder & Tree Wiki</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
     /* =========================================================================
-       THEME VARIABLES: DEFAULT = EYE-COMFORT WHITE THEME (화이트 테마 기본)
+       APPLE CUPERTINO DESIGN TOKENS (LIGHT DEFAULT & DARK APPEARANCE)
        ========================================================================= */
     :root {
-      --bg-page: #f1f5f9;
-      --desktop-wallpaper:
-        radial-gradient(circle at 18% 22%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 82% 75%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
-        linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #e8eef5 100%);
-      --menubar-bg: rgba(255, 255, 255, 0.88);
-      --menubar-border: rgba(15, 23, 42, 0.1);
-      --text-main: #0f172a;
-      --text-sub: #475569;
-      --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-soft: rgba(37, 99, 235, 0.12);
-      --kpi-color: #b45309;
-      --kpi-bg: #fef3c7;
-      --strong-color: #1d4ed8;
-      --finder-bg: rgba(255, 255, 255, 0.95);
-      --finder-border: rgba(15, 23, 42, 0.12);
-      --finder-titlebar: #f1f5f9;
-      --finder-pathbar: #f8fafc;
-      --col-border: #e2e8f0;
-      --card-bg: #ffffff;
-      --card-hover: #f8fafc;
-      --card-border: #cbd5e1;
-      --dock-bg: rgba(255, 255, 255, 0.82);
-      --dock-btn-bg: linear-gradient(145deg, #ffffff, #f1f5f9);
-      --wiki-bg: #ffffff;
-      --wiki-sidebar-bg: #f8fafc;
-      --wiki-summary-bg: #eff6ff;
-      --table-th-bg: #f1f5f9;
-      --table-even-bg: #f8fafc;
-      --desk-icon-text: #0f172a;
-      --desk-icon-shadow: 0 1px 2px rgba(255,255,255,0.9);
-      --Quiz-a-bg: #ecfdf5;
-      --Quiz-a-text: #065f46;
+      --font-sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Pretendard", "Inter", sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", monospace;
+
+      /* Light Mode Wallpaper: Soft Cupertino Sonoma/Sequoia Daylight Mesh */
+      --wallpaper:
+        radial-gradient(at 15% 15%, rgba(120, 180, 255, 0.38) 0px, transparent 50%),
+        radial-gradient(at 85% 20%, rgba(190, 165, 255, 0.32) 0px, transparent 50%),
+        radial-gradient(at 50% 85%, rgba(140, 210, 255, 0.35) 0px, transparent 55%),
+        linear-gradient(180deg, #dde7f5 0%, #eef2f9 55%, #e4ebf5 100%);
+
+      --menubar-bg: rgba(255, 255, 255, 0.68);
+      --menubar-border: rgba(0, 0, 0, 0.08);
+      --menubar-text: #1d1d1f;
+
+      --win-bg: rgba(255, 255, 255, 0.88);
+      --win-sidebar: rgba(242, 242, 247, 0.78);
+      --win-toolbar: rgba(250, 250, 252, 0.92);
+      --win-border: rgba(0, 0, 0, 0.12);
+      --win-shadow: 0 28px 70px rgba(0, 0, 0, 0.16), 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+      --divider: rgba(0, 0, 0, 0.08);
+
+      --text-primary: #1d1d1f;
+      --text-secondary: #515154;
+      --text-tertiary: #86868b;
+
+      --apple-blue: #007aff;
+      --apple-blue-soft: rgba(0, 122, 255, 0.12);
+      --surface-card: #ffffff;
+      --surface-subtle: #f5f5f7;
+      --badge-bg: rgba(0, 122, 255, 0.1);
+      --badge-text: #0066cc;
+
+      --dock-bg: rgba(255, 255, 255, 0.58);
+      --dock-border: rgba(255, 255, 255, 0.75);
+      --dock-shadow: 0 18px 40px rgba(0, 0, 0, 0.15), 0 0 0 0.5px rgba(0, 0, 0, 0.1);
     }
 
-    /* DARK THEME OVERRIDES (다크 테마 전환 시) */
     body.dark-theme {
-      --bg-page: #090d16;
-      --desktop-wallpaper:
-        radial-gradient(circle at 18% 22%, rgba(59, 130, 246, 0.25) 0%, transparent 45%),
-        radial-gradient(circle at 82% 75%, rgba(16, 185, 129, 0.18) 0%, transparent 50%),
-        linear-gradient(135deg, #0b1120 0%, #111827 50%, #090d16 100%);
-      --menubar-bg: rgba(10, 15, 28, 0.88);
-      --menubar-border: rgba(255, 255, 255, 0.12);
-      --text-main: #f8fafc;
-      --text-sub: #cbd5e1;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.16);
-      --kpi-color: #fde047;
-      --kpi-bg: rgba(253, 224, 71, 0.12);
-      --strong-color: #fde047;
-      --finder-bg: rgba(15, 23, 42, 0.90);
-      --finder-border: rgba(255, 255, 255, 0.15);
-      --finder-titlebar: rgba(30, 41, 59, 0.95);
-      --finder-pathbar: rgba(9, 13, 22, 0.75);
-      --col-border: rgba(255, 255, 255, 0.09);
-      --card-bg: rgba(30, 41, 59, 0.65);
-      --card-hover: rgba(30, 41, 59, 0.95);
-      --card-border: rgba(255, 255, 255, 0.12);
-      --dock-bg: rgba(15, 23, 42, 0.82);
-      --dock-btn-bg: linear-gradient(145deg, #1e293b, #0f172a);
-      --wiki-bg: #0b1120;
-      --wiki-sidebar-bg: #070b14;
-      --wiki-summary-bg: #131c31;
-      --table-th-bg: #151f32;
-      --table-even-bg: rgba(15, 23, 42, 0.55);
-      --desk-icon-text: #f8fafc;
-      --desk-icon-shadow: 0 1px 4px rgba(0,0,0,0.9);
-      --Quiz-a-bg: rgba(16, 185, 129, 0.12);
-      --Quiz-a-text: #a7f3d0;
+      --wallpaper:
+        radial-gradient(at 20% 20%, rgba(10, 132, 255, 0.24) 0px, transparent 50%),
+        radial-gradient(at 80% 25%, rgba(94, 92, 230, 0.22) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(48, 209, 88, 0.12) 0px, transparent 55%),
+        linear-gradient(180deg, #0b0f19 0%, #121826 60%, #090d16 100%);
+
+      --menubar-bg: rgba(28, 28, 30, 0.72);
+      --menubar-border: rgba(255, 255, 255, 0.1);
+      --menubar-text: #f5f5f7;
+
+      --win-bg: rgba(30, 30, 32, 0.90);
+      --win-sidebar: rgba(22, 22, 24, 0.82);
+      --win-toolbar: rgba(38, 38, 41, 0.92);
+      --win-border: rgba(255, 255, 255, 0.14);
+      --win-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 0 0.5px rgba(255, 255, 255, 0.15);
+      --divider: rgba(255, 255, 255, 0.09);
+
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --text-tertiary: #6e6e73;
+
+      --apple-blue: #0a84ff;
+      --apple-blue-soft: rgba(10, 132, 255, 0.18);
+      --surface-card: #2c2c2e;
+      --surface-subtle: #1c1c1e;
+      --badge-bg: rgba(10, 132, 255, 0.18);
+      --badge-text: #64d2ff;
+
+      --dock-bg: rgba(40, 40, 45, 0.58);
+      --dock-border: rgba(255, 255, 255, 0.18);
+      --dock-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 0.5px rgba(255, 255, 255, 0.14);
     }
 
     body {
       margin: 0; padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-page);
-      color: var(--text-main);
+      font-family: var(--font-sf);
+      background: var(--wallpaper);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
       overflow-x: hidden;
-      transition: background 0.2s, color 0.2s;
+      letter-spacing: -0.012em;
     }
 
     /* =========================================================================
-       TOP MACOS MENU BAR (공통 상단 메뉴바)
+       1. MACOS TOP MENU BAR (28px Translucent Vibrancy Bar)
        ========================================================================= */
-    .os-menubar {
+    .mac-menubar {
       position: fixed; top: 0; left: 0; right: 0;
-      height: 38px;
+      height: 28px;
       background: var(--menubar-bg);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--menubar-border);
+      backdrop-filter: saturate(180%) blur(25px);
+      -webkit-backdrop-filter: saturate(180%) blur(25px);
+      border-bottom: 0.5px solid var(--menubar-border);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px;
-      font-size: 12.5px;
-      z-index: 9999;
+      padding: 0 14px;
+      font-size: 13px;
+      color: var(--menubar-text);
+      z-index: 10000;
       user-select: none;
     }
-    .menu-left, .menu-right { display: flex; align-items: center; gap: 10px; }
-    .menu-item {
-      cursor: pointer; padding: 4px 10px; border-radius: 6px;
-      color: var(--text-main); font-weight: 600; transition: background 0.15s;
-    }
-    .menu-item:hover, .menu-item.active { background: var(--accent-soft); color: var(--accent); }
-    .theme-toggle-btn {
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
+    .mb-left, .mb-right { display: flex; align-items: center; gap: 2px; }
+    .mb-item {
+      padding: 2px 9px;
+      border-radius: 4px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      font-weight: 500;
+      transition: background 0.12s;
     }
-    .theme-toggle-btn:hover { filter: brightness(1.08); }
-    .gatekeeper-pill {
-      background: rgba(16, 185, 129, 0.14);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #059669;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-family: 'JetBrains Mono', monospace;
+    .mb-item:hover { background: var(--apple-blue-soft); }
+    .mb-apple { font-size: 15px; font-weight: 700; padding: 1px 10px; }
+    .mb-appname { font-weight: 700; }
+    .mb-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 2px 10px; border-radius: 999px;
+      background: var(--apple-blue); color: #fff;
+      font-size: 11.5px; font-weight: 600;
+      border: none; cursor: pointer; margin-right: 6px;
     }
-    body.dark-theme .gatekeeper-pill { color: #6ee7b7; }
+    .mb-pill:hover { opacity: 0.92; }
 
     /* =========================================================================
-       STAGE 1: FRONT DOOR #04 — VIRTUAL DESKTOP OS (정문 화면)
+       2. MACOS DESKTOP WORKSPACE & AUTHENTIC FINDER WINDOW (정문)
        ========================================================================= */
-    #desktop-stage {
-      margin-top: 38px;
-      min-height: calc(100vh - 38px);
-      background: var(--desktop-wallpaper);
-      position: relative;
-      padding: 28px;
+    #desktop-workspace {
+      padding: 46px 28px 98px;
+      min-height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: 210px 1fr;
+      grid-template-columns: 1fr 110px;
       gap: 24px;
       align-items: start;
-      padding-bottom: 96px;
-    }
-    @media (max-width: 960px) {
-      #desktop-stage { grid-template-columns: 1fr; }
-    }
-
-    /* Desktop Folder Icons */
-    .desktop-icons-col {
-      display: grid;
-      grid-template-columns: 96px 96px;
-      gap: 18px 10px;
-    }
-    .desk-icon {
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center; padding: 10px 6px; border-radius: 12px;
-      cursor: pointer; transition: background 0.15s, transform 0.15s;
-      user-select: none;
-    }
-    .desk-icon:hover {
-      background: rgba(128, 128, 128, 0.15);
-      transform: translateY(-2px);
-    }
-    .desk-icon-glyph {
-      font-size: 42px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
-    }
-    .desk-icon-label {
-      font-size: 11.5px; font-weight: 700; color: var(--desk-icon-text);
-      margin-top: 6px; line-height: 1.3;
-      text-shadow: var(--desk-icon-shadow);
-    }
-
-    /* macOS Finder 4-Column Hierarchy Explorer Window */
-    .finder-window {
-      background: var(--finder-bg);
-      backdrop-filter: blur(28px);
-      border: 1px solid var(--finder-border);
-      border-radius: 16px;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
-      overflow: hidden;
-      max-width: 1160px;
-      width: 100%;
-    }
-    .finder-titlebar {
-      height: 44px;
-      background: var(--finder-titlebar);
-      border-bottom: 1px solid var(--col-border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 16px;
-    }
-    .traffic-lights { display: flex; gap: 8px; }
-    .tl-dot { width: 12px; height: 12px; border-radius: 50%; }
-    .finder-path-bar {
-      background: var(--finder-pathbar);
-      padding: 8px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--accent);
-      font-weight: 600;
-      border-bottom: 1px solid var(--col-border);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
-    }
-    .finder-search {
-      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main);
-      padding: 6px 12px; border-radius: 8px; font-size: 12px; width: 250px;
-    }
-
-    /* 4-Column Miller Columns View: AI -> 컨퍼런스 -> 컨퍼런스 이름 -> 세부 정보 */
-    .miller-columns {
-      display: grid;
-      grid-template-columns: 150px 160px 250px 1fr;
-      min-height: 440px;
     }
     @media (max-width: 1024px) {
-      .miller-columns { grid-template-columns: 1fr; }
+      #desktop-workspace { grid-template-columns: 1fr; padding: 42px 14px 96px; }
+      .desktop-right-aliases { display: none !important; }
     }
-    .m-col {
-      border-right: 1px solid var(--col-border);
-      padding: 12px 10px;
-      overflow-y: auto;
+
+    /* Right-side macOS Desktop Folder Aliases (Authentic macOS positions icons on the right!) */
+    .desktop-right-aliases {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding-top: 8px;
     }
-    .m-col-header {
-      font-size: 10.5px; font-weight: 800; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.8px;
-      padding: 4px 8px 8px; border-bottom: 1px solid var(--col-border);
-      margin-bottom: 8px;
-    }
-    .m-item {
-      padding: 9px 10px;
+    .mac-alias {
+      width: 96px;
+      padding: 8px 4px;
       border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 4px;
-      color: var(--text-sub);
-      font-weight: 500;
-      transition: all 0.12s;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; cursor: pointer; user-select: none;
+      transition: background 0.15s;
     }
-    .m-item:hover { background: var(--accent-soft); color: var(--text-main); }
-    .m-item.selected {
-      background: #2563eb;
-      color: #ffffff;
-      font-weight: 700;
+    .mac-alias:hover {
+      background: rgba(0, 122, 255, 0.14);
     }
-    .m-detail-card {
-      padding: 15px;
-      border-radius: 10px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-    }
-    .m-detail-card:hover {
-      transform: translateX(4px);
-      border-color: var(--accent);
-      background: var(--card-hover);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-    }
-
-    /* Bottom macOS Dock */
-    .os-dock {
-      position: fixed;
-      bottom: 14px; left: 50%; transform: translateX(-50%);
-      background: var(--dock-bg);
-      backdrop-filter: blur(22px);
-      border: 1px solid var(--finder-border);
-      padding: 8px 16px;
-      border-radius: 22px;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.18);
-      z-index: 9000;
-    }
-    .dock-btn {
-      width: 48px; height: 48px;
-      border-radius: 13px;
-      background: var(--dock-btn-bg);
-      border: 1px solid var(--card-border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1);
-    }
-    .dock-btn:hover {
-      transform: translateY(-10px) scale(1.2);
-      border-color: var(--accent);
-    }
-    .dock-sep { width: 1px; height: 32px; background: var(--col-border); margin: 0 4px; }
-
-    /* =========================================================================
-       STAGE 2: INNER CONTENT VIEW — TREE WIKI READER (트리 위키 학습 화면)
-       ========================================================================= */
-    #wiki-stage {
-      display: none;
-      margin-top: 38px;
-      min-height: calc(100vh - 38px);
-      grid-template-columns: 320px 1fr;
-      background: var(--wiki-bg);
-    }
-    @media (max-width: 860px) {
-      #wiki-stage { grid-template-columns: 1fr; }
-    }
-
-    /* Left 4-Tier Tree Wiki Sidebar */
-    .wiki-tree-aside {
-      background: var(--wiki-sidebar-bg);
-      border-right: 1px solid var(--col-border);
-      padding: 20px 14px 90px;
-      overflow-y: auto;
-    }
-    .return-desktop-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff; border: none;
-      padding: 11px 14px; border-radius: 10px;
-      font-weight: 700; font-size: 13px;
-      cursor: pointer; margin-bottom: 16px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
-    }
-    .tree-lvl-1, .tree-lvl-2, .tree-lvl-3 { margin-bottom: 6px; }
-    .tree-lvl-1 > summary {
-      font-size: 14px; font-weight: 800; color: var(--text-main);
-      padding: 8px 10px; border-radius: 8px; cursor: pointer;
-      background: var(--accent-soft);
-    }
-    .tree-lvl-2 { padding-left: 12px; margin-top: 6px; }
-    .tree-lvl-2 > summary {
-      font-size: 13px; font-weight: 700; color: var(--accent);
-      padding: 6px 10px; border-radius: 6px; cursor: pointer;
-    }
-    .tree-lvl-3 {
-      padding-left: 14px; margin-top: 4px;
-      border-left: 1px solid var(--col-border); margin-left: 10px;
-    }
-    .tree-lvl-3 > summary {
-      font-size: 12.5px; font-weight: 700; color: var(--text-main);
-      padding: 6px 8px; border-radius: 6px; cursor: pointer;
-    }
-    .tree-lvl-4-list {
-      padding-left: 12px; margin: 4px 0 8px 8px;
-      border-left: 1px dashed var(--card-border);
-    }
-    .tree-leaf {
-      display: block;
-      padding: 7px 10px;
-      font-size: 12px;
-      color: var(--text-sub);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      margin-bottom: 3px;
-      line-height: 1.35;
-      transition: all 0.12s;
-    }
-    .tree-leaf:hover { background: var(--accent-soft); color: var(--text-main); }
-    .tree-leaf.active {
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 700;
-      border-left: 3px solid var(--accent);
-    }
-
-    /* Center Document Reader */
-    .wiki-center-main {
-      padding: 36px 56px 100px;
-      max-width: 980px;
-      overflow-y: auto;
-    }
-    .hierarchy-crumb {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--accent-soft); border: 1px solid var(--col-border);
-      padding: 5px 12px; border-radius: 999px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px; color: var(--accent); font-weight: 600;
-      margin-bottom: 14px;
-    }
-    .doc-h1 {
-      font-size: 30px; font-weight: 800; line-height: 1.3;
-      margin: 0 0 12px 0; color: var(--text-main);
-    }
-    .doc-meta-row {
-      display: flex; gap: 14px; flex-wrap: wrap;
-      font-size: 13px; color: var(--text-muted);
-      padding-bottom: 18px; border-bottom: 1px solid var(--col-border);
-      margin-bottom: 22px;
-    }
-    .exec-summary-box {
-      background: var(--wiki-summary-bg);
-      border-left: 4px solid var(--accent);
-      padding: 20px 24px;
-      border-radius: 0 12px 12px 0;
-      font-size: 15px; line-height: 1.75; color: var(--text-main);
-      margin-bottom: 26px;
-    }
-    .key-points-list {
-      line-height: 1.8; font-size: 14.5px; color: var(--text-sub);
-      padding-left: 20px; margin-bottom: 28px;
-    }
-    .key-points-list li { margin-bottom: 10px; }
-    .key-points-list strong {
-      color: var(--strong-color);
-      transition: all 0.2s;
-    }
-    /* Active Recall Cloze (빈칸 추론 학습 모드) */
-    body.cloze-active .key-points-list strong,
-    body.cloze-active .wiki-table td:last-child {
-      background: #94a3b8;
-      color: transparent !important;
+    .mac-alias-label {
+      margin-top: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.25;
+      padding: 1px 6px;
       border-radius: 4px;
-      padding: 0 4px;
-      cursor: pointer;
+      background: var(--menubar-bg);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Authentic macOS Finder Window */
+    .mac-window {
+      background: var(--win-bg);
+      backdrop-filter: saturate(180%) blur(30px);
+      -webkit-backdrop-filter: saturate(180%) blur(30px);
+      border: 0.5px solid var(--win-border);
+      border-radius: 12px;
+      box-shadow: var(--win-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 600px;
+    }
+
+    /* Unified Finder Toolbar */
+    .finder-toolbar {
+      height: 52px;
+      background: var(--win-toolbar);
+      border-bottom: 0.5px solid var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
       user-select: none;
     }
-    body.cloze-active .key-points-list strong:hover,
-    body.cloze-active .wiki-table td:last-child:hover {
-      color: var(--strong-color) !important;
-      background: var(--accent-soft);
+    .ft-left { display: flex; align-items: center; gap: 16px; }
+    .traffic-group { display: flex; gap: 8px; align-items: center; }
+    .tl {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 0.5px solid rgba(0,0,0,0.15);
+      display: inline-block;
+    }
+    .tl-red { background: #ff5f57; }
+    .tl-yellow { background: #febc2e; }
+    .tl-green { background: #28c840; }
+    .nav-arrows { display: flex; gap: 4px; }
+    .nav-arrow-btn {
+      width: 26px; height: 26px; border-radius: 6px;
+      border: none; background: transparent; color: var(--text-secondary);
+      font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .nav-arrow-btn:hover { background: var(--divider); }
+    .finder-win-title {
+      font-size: 14.5px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 7px;
     }
 
-    .wiki-table {
-      width: 100%; border-collapse: collapse;
-      margin: 14px 0 28px; font-size: 13.5px;
+    /* Segmented Control in Toolbar */
+    .segmented-ctrl {
+      display: inline-flex;
+      background: var(--divider);
+      padding: 2px;
+      border-radius: 7px;
+      gap: 2px;
     }
-    .wiki-table th, .wiki-table td {
-      border: 1px solid var(--col-border); padding: 12px 14px; text-align: left;
-      color: var(--text-main);
+    .seg-btn {
+      border: none; background: transparent;
+      padding: 4px 11px; border-radius: 5px;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.12s;
     }
-    .wiki-table th { background: var(--table-th-bg); color: var(--accent); font-weight: 700; }
-    .wiki-table tr:nth-child(even) td { background: var(--table-even-bg); }
+    .seg-btn.active {
+      background: var(--surface-card);
+      color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
 
-    .recall-card {
-      background: var(--wiki-sidebar-bg); border: 1px solid var(--col-border);
-      border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;
+    /* Spotlight Search Field in Toolbar */
+    .mac-search-wrap {
+      position: relative;
+      display: flex; align-items: center;
+    }
+    .mac-search-input {
+      background: var(--surface-subtle);
+      border: 0.5px solid var(--divider);
+      color: var(--text-primary);
+      border-radius: 7px;
+      padding: 5px 10px 5px 28px;
+      font-size: 12.5px;
+      width: 210px;
+      outline: none;
+      font-family: var(--font-sf);
+      transition: width 0.2s, border-color 0.15s;
+    }
+    .mac-search-input:focus {
+      width: 250px;
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 3px var(--apple-blue-soft);
+    }
+    .mac-search-icon {
+      position: absolute; left: 9px; font-size: 12px; color: var(--text-tertiary);
+      pointer-events: none;
+    }
+
+    /* Finder Body: Left Favorites Sidebar + 4-Column Miller View */
+    .finder-body {
+      display: grid;
+      grid-template-columns: 195px 1fr;
+      flex: 1;
+      min-height: 510px;
+    }
+    @media (max-width: 900px) {
+      .finder-body { grid-template-columns: 1fr; }
+      .finder-sidebar { display: none; }
+    }
+
+    /* Left Vibrancy Favorites Sidebar */
+    .finder-sidebar {
+      background: var(--win-sidebar);
+      border-right: 0.5px solid var(--divider);
+      padding: 14px 10px;
+      user-select: none;
+    }
+    .fs-section-title {
+      font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+      padding: 4px 10px; margin-top: 10px;
+    }
+    .fs-section-title:first-child { margin-top: 0; }
+    .fs-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: 6px;
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      cursor: pointer; transition: background 0.1s;
+    }
+    .fs-row:hover { background: var(--divider); }
+    .fs-row.active {
+      background: var(--apple-blue-soft);
+      color: var(--apple-blue);
+      font-weight: 600;
+    }
+    .tag-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+    /* 4-Column Miller View (AI -> 컨퍼런스 -> 컨퍼런스 이름 -> 세부 정보) */
+    .miller-grid {
+      display: grid;
+      grid-template-columns: 135px 145px 225px 1fr;
+      height: 100%;
+    }
+    @media (max-width: 1120px) {
+      .miller-grid { grid-template-columns: 200px 1fr; }
+      .col-hide-tablet { display: none; }
+    }
+    @media (max-width: 700px) {
+      .miller-grid { grid-template-columns: 1fr; }
+    }
+    .miller-col {
+      border-right: 0.5px solid var(--divider);
+      padding: 8px 6px;
+      overflow-y: auto;
+      user-select: none;
+    }
+    .miller-col-label {
+      font-size: 10.5px; font-weight: 700; color: var(--text-tertiary);
+      padding: 4px 10px 6px;
+      border-bottom: 0.5px solid var(--divider);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+    .miller-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px; border-radius: 6px;
+      font-size: 13px; color: var(--text-primary);
+      cursor: pointer; margin-bottom: 2px;
+    }
+    .miller-row:hover { background: var(--surface-subtle); }
+    .miller-row.selected {
+      background: var(--apple-blue);
+      color: #ffffff;
+      font-weight: 500;
+    }
+    .miller-row.selected svg path { fill: #ffffff !important; }
+    .miller-row-left { display: flex; align-items: center; gap: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .miller-chevron { font-size: 11px; opacity: 0.65; }
+
+    /* Column 4: Detailed Note Cards */
+    .detail-list-col {
+      padding: 12px 16px;
+      overflow-y: auto;
+      background: var(--surface-subtle);
+    }
+    .mac-note-card {
+      background: var(--surface-card);
+      border: 0.5px solid var(--divider);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .mac-note-card:hover {
+      transform: translateY(-1px);
+      border-color: var(--apple-blue);
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.10);
+    }
+    .mnc-top {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11.5px; color: var(--text-tertiary); margin-bottom: 5px;
+    }
+    .mnc-title {
+      font-size: 14.5px; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 6px; line-height: 1.35;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mnc-summary {
+      font-size: 12.5px; color: var(--text-secondary);
+      line-height: 1.55; margin-bottom: 10px;
+    }
+    .mnc-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600;
+      color: var(--badge-text); background: var(--badge-bg);
+      padding: 3px 9px; border-radius: 6px;
+      font-family: var(--font-mono);
+    }
+
+    /* Authentic Finder Bottom Path & Status Bar */
+    .finder-statusbar {
+      height: 28px;
+      background: var(--win-toolbar);
+      border-top: 0.5px solid var(--divider);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px;
+      font-size: 11.5px; color: var(--text-secondary);
+      user-select: none;
+    }
+    .path-crumbs { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+
+    /* =========================================================================
+       3. STAGE 2: APPLE DEVELOPER DOCS / APPLE NOTES STYLE TREE WIKI VIEW
+       ========================================================================= */
+    #wiki-workspace {
+      display: none;
+      padding: 46px 28px 98px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    .wiki-mac-window {
+      background: var(--win-bg);
+      backdrop-filter: saturate(180%) blur(30px);
+      -webkit-backdrop-filter: saturate(180%) blur(30px);
+      border: 0.5px solid var(--win-border);
+      border-radius: 12px;
+      box-shadow: var(--win-shadow);
+      overflow: hidden;
+      min-height: calc(100vh - 145px);
+      display: flex;
+      flex-direction: column;
+    }
+    .wiki-body-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      flex: 1;
+    }
+    @media (max-width: 860px) {
+      .wiki-body-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Left Tree Wiki Sidebar (Apple Documentation Style) */
+    .apple-tree-sidebar {
+      background: var(--win-sidebar);
+      border-right: 0.5px solid var(--divider);
+      padding: 16px 12px 40px;
+      overflow-y: auto;
+    }
+    .tree-group-details { margin-bottom: 4px; }
+    .tree-group-details > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tree-group-details > summary:hover { background: var(--divider); }
+    .tree-nested { padding-left: 14px; margin-top: 2px; }
+    .tree-leaf-item {
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      margin-bottom: 2px;
+      line-height: 1.35;
+      transition: all 0.1s;
+    }
+    .tree-leaf-item:hover { background: var(--divider); color: var(--text-primary); }
+    .tree-leaf-item.active {
+      background: var(--apple-blue);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Right Apple Reader Content Area */
+    .apple-doc-reader {
+      padding: 40px 56px 64px;
+      background: var(--surface-card);
+      max-width: 960px;
+    }
+    @media (max-width: 700px) {
+      .apple-doc-reader { padding: 24px 20px; }
+    }
+    .apple-eyebrow {
+      font-size: 12px; font-weight: 700; color: var(--apple-blue);
+      letter-spacing: 0.02em; margin-bottom: 8px;
+    }
+    .apple-doc-title {
+      font-size: 32px; font-weight: 800; letter-spacing: -0.025em;
+      line-height: 1.25; margin: 0 0 14px 0; color: var(--text-primary);
+    }
+    .apple-meta-bar {
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+      font-size: 13px; color: var(--text-secondary);
+      padding-bottom: 20px; border-bottom: 0.5px solid var(--divider);
+      margin-bottom: 24px;
+    }
+    .apple-callout {
+      background: var(--surface-subtle);
+      border-radius: 12px;
+      padding: 20px 24px;
+      border: 0.5px solid var(--divider);
+      font-size: 15px; line-height: 1.75; color: var(--text-primary);
+      margin-bottom: 30px;
+    }
+    .apple-section-h3 {
+      font-size: 19px; font-weight: 700; letter-spacing: -0.015em;
+      color: var(--text-primary); margin: 0 0 12px 0;
+    }
+    .apple-list {
+      font-size: 15px; line-height: 1.8; color: var(--text-secondary);
+      padding-left: 20px; margin: 0 0 32px 0;
+    }
+    .apple-list li { margin-bottom: 10px; }
+    .apple-list strong { color: var(--text-primary); font-weight: 700; }
+
+    /* Cloze Blank-Out Mode */
+    body.cloze-active .apple-list strong,
+    body.cloze-active .apple-table td:last-child {
+      background: var(--apple-blue-soft);
+      color: transparent !important;
+      border-radius: 4px; padding: 0 4px;
+      cursor: pointer; user-select: none;
+    }
+    body.cloze-active .apple-list strong:hover,
+    body.cloze-active .apple-table td:last-child:hover {
+      color: var(--apple-blue) !important;
+    }
+
+    .apple-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      border: 0.5px solid var(--divider); border-radius: 10px;
+      overflow: hidden; margin-bottom: 32px; font-size: 13.5px;
+    }
+    .apple-table th, .apple-table td {
+      padding: 12px 16px; text-align: left;
+      border-bottom: 0.5px solid var(--divider);
+      color: var(--text-primary);
+    }
+    .apple-table th {
+      background: var(--surface-subtle);
+      font-weight: 700; color: var(--text-secondary);
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .apple-table tr:last-child td { border-bottom: none; }
+
+    .apple-qa-box {
+      background: var(--surface-subtle);
+      border: 0.5px solid var(--divider);
+      border-radius: 12px;
+      padding: 18px 22px;
+    }
+
+    /* =========================================================================
+       4. AUTHENTIC MACOS FLOATING GLASS DOCK (하단 독)
+       ========================================================================= */
+    .mac-dock-container {
+      position: fixed;
+      bottom: 12px; left: 50%; transform: translateX(-50%);
+      background: var(--dock-bg);
+      backdrop-filter: saturate(180%) blur(25px);
+      -webkit-backdrop-filter: saturate(180%) blur(25px);
+      border: 0.5px solid var(--dock-border);
+      box-shadow: var(--dock-shadow);
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 10000;
+      user-select: none;
+    }
+    .dock-app {
+      position: relative;
+      width: 46px; height: 46px;
+      border-radius: 11px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.2, 1, 0.3, 1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .dock-app:hover {
+      transform: translateY(-8px) scale(1.16);
+    }
+    .dock-app::after {
+      content: attr(data-title);
+      position: absolute;
+      top: -34px; left: 50%; transform: translateX(-50%);
+      background: var(--menubar-bg);
+      backdrop-filter: blur(12px);
+      color: var(--text-primary);
+      border: 0.5px solid var(--win-border);
+      padding: 3px 9px; border-radius: 6px;
+      font-size: 11.5px; font-weight: 600; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity 0.15s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .dock-app:hover::after { opacity: 1; }
+    .dock-dot {
+      position: absolute; bottom: -5px; width: 4px; height: 4px;
+      border-radius: 50%; background: var(--text-primary); opacity: 0.7;
+    }
+    .dock-divider {
+      width: 1px; height: 32px; background: var(--divider); margin: 0 2px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top macOS Menu Bar -->
-  <header class="os-menubar">
-    <div class="menu-left">
-      <span class="menu-item" style="font-weight:800; color:var(--accent);" onclick="showDesktop()"> ArchiveOS</span>
-      <span class="menu-item active" id="nav-desktop" onclick="showDesktop()">🖥️ 정문 데스크탑 (Home)</span>
-      <span class="menu-item" id="nav-wiki" onclick="openDoc(PUBLIC_DOCS[0].id)">📖 트리 위키 (Tree Wiki)</span>
-      <span class="menu-item" onclick="toggleCloze()">🧠 빈칸 암기 모드 (Cloze)</span>
+  <!-- 1. macOS Top Menu Bar -->
+  <header class="mac-menubar">
+    <div class="mb-left">
+      <span class="mb-item mb-apple" onclick="showDesktop()"></span>
+      <span class="mb-item mb-appname" id="menubar-app-title" onclick="showDesktop()">Finder</span>
+      <span class="mb-item" onclick="showDesktop()">파일</span>
+      <span class="mb-item" onclick="openDoc(PUBLIC_DOCS[0].id)">트리 위키</span>
+      <span class="mb-item" onclick="selectConf('ALL')">전체 보기</span>
+      <span class="mb-item" onclick="toggleCloze()">빈칸 학습(Cloze)</span>
     </div>
-    <div class="menu-right">
-      <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">
-        🌙 다크 테마로 전환 (현재: 화이트)
-      </button>
+    <div class="mb-right">
+      <button class="mb-pill" id="theme-pill-btn" onclick="toggleTheme()">🌙 다크 모드</button>
+      <span class="mb-item" id="mac-clock" style="font-weight:600;">10월 15일 (목)</span>
     </div>
   </header>
 
-  <!-- =========================================================================
-       STAGE 1: FRONT DOOR #04 — VIRTUAL DESKTOP OS (정문 화면)
-       ========================================================================= -->
-  <section id="desktop-stage">
-    <!-- Left Desktop Folder Icons -->
-    <div class="desktop-icons-col">
-      <div class="desk-icon" onclick="selectConf('Toss SLASH 26')">
-        <div class="desk-icon-glyph">💙</div>
-        <div class="desk-icon-label">Toss SLASH 26<br>(5 노트)</div>
+  <!-- 2. STAGE 1: macOS Desktop & Finder 4-Column Window (정문) -->
+  <main id="desktop-workspace">
+    <!-- Center Finder Window -->
+    <div class="mac-window">
+      <!-- Unified Finder Toolbar -->
+      <div class="finder-toolbar">
+        <div class="ft-left">
+          <div class="traffic-group">
+            <span class="tl tl-red"></span>
+            <span class="tl tl-yellow"></span>
+            <span class="tl tl-green"></span>
+          </div>
+          <div class="nav-arrows">
+            <button class="nav-arrow-btn" onclick="selectConf('ALL')" title="전체 보기">‹</button>
+            <button class="nav-arrow-btn" onclick="openDoc(currentDoc.id)" title="트리 위키 열기">›</button>
+          </div>
+          <div class="finder-win-title">
+            <!-- Authentic macOS Aqua Folder SVG -->
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+              <path d="M0 2.5C0 1.11929 1.11929 0 2.5 0H6.38197C7.1386 0 7.851 0.34247 8.31623 0.93459L9.18377 2.03874C9.649 2.63086 10.3614 2.97333 11.118 2.97333H17.5C18.8807 2.97333 20 4.09262 20 5.47333V13.5C20 14.8807 18.8807 16 17.5 16H2.5C1.11929 16 0 14.8807 0 13.5V2.5Z" fill="#5AC8FA"/>
+              <path d="M0 5C0 3.89543 0.895431 3 2 3H18C19.1046 3 20 3.89543 20 5V13.5C20 14.8807 18.8807 16 17.5 16H2.5C1.11929 16 0 14.8807 0 13.5V5Z" fill="url(#macFolderGrad)"/>
+              <defs>
+                <linearGradient id="macFolderGrad" x1="10" y1="3" x2="10" y2="16" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#64D2FF"/>
+                  <stop offset="1" stop-color="#007AFF"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span id="finder-header-title">AI — 컨퍼런스 아카이브</span>
+          </div>
+        </div>
+
+        <div class="segmented-ctrl">
+          <button class="seg-btn active" onclick="showDesktop()">계층 컬럼 (Columns)</button>
+          <button class="seg-btn" onclick="openDoc(currentDoc.id)">트리 위키 (Tree Wiki)</button>
+        </div>
+
+        <div class="mac-search-wrap">
+          <span class="mac-search-icon">🔍</span>
+          <input type="text" class="mac-search-input" placeholder="검색" oninput="searchFinder(this.value)">
+        </div>
       </div>
-      <div class="desk-icon" onclick="selectConf('if(kakao)26')">
-        <div class="desk-icon-glyph">💛</div>
-        <div class="desk-icon-label">if(kakao)26<br>(7 노트)</div>
+
+      <!-- Finder Body -->
+      <div class="finder-body">
+        <!-- Left Favorites Sidebar -->
+        <aside class="finder-sidebar">
+          <div class="fs-section-title">즐겨찾기</div>
+          <div class="fs-row active" id="fav-all" onclick="selectConf('ALL')">
+            <span style="color:var(--apple-blue);">📂</span><span>모든 컨퍼런스 (16)</span>
+          </div>
+          <div class="fs-row" id="fav-toss" onclick="selectConf('Toss SLASH 26')">
+            <span style="color:var(--apple-blue);">📁</span><span>Toss SLASH 26</span>
+          </div>
+          <div class="fs-row" id="fav-kakao" onclick="selectConf('if(kakao)26')">
+            <span style="color:var(--apple-blue);">📁</span><span>if(kakao)26</span>
+          </div>
+          <div class="fs-row" id="fav-samsung" onclick="selectConf('Samsung AI Forum 2026')">
+            <span style="color:var(--apple-blue);">📁</span><span>Samsung AI Forum</span>
+          </div>
+
+          <div class="fs-section-title">핵심 주제 태그</div>
+          <div class="fs-row" onclick="searchFinder('vLLM')">
+            <span class="tag-dot" style="background:#ff3b30;"></span><span>LLM 서빙 & Infra</span>
+          </div>
+          <div class="fs-row" onclick="searchFinder('Agent')">
+            <span class="tag-dot" style="background:#ff9500;"></span><span>에이전트 & MCP</span>
+          </div>
+          <div class="fs-row" onclick="searchFinder('TTS')">
+            <span class="tag-dot" style="background:#af52de;"></span><span>음성 & 멀티모달</span>
+          </div>
+          <div class="fs-row" onclick="searchFinder('TASTE')">
+            <span class="tag-dot" style="background:#34c759;"></span><span>추천 파운데이션</span>
+          </div>
+        </aside>
+
+        <!-- 4-Column Miller Hierarchy: AI -> 컨퍼런스 -> 컨퍼런스 이름 -> 세부 정보 -->
+        <div class="miller-grid">
+          <!-- Column 1: AI -->
+          <div class="miller-col col-hide-tablet">
+            <div class="miller-col-label">1단계: 대분류</div>
+            <div class="miller-row selected">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#007AFF"/></svg>
+                <span>AI</span>
+              </div>
+              <span class="miller-chevron">›</span>
+            </div>
+          </div>
+
+          <!-- Column 2: 컨퍼런스 -->
+          <div class="miller-col col-hide-tablet">
+            <div class="miller-col-label">2단계: 중분류</div>
+            <div class="miller-row selected">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#007AFF"/></svg>
+                <span>컨퍼런스</span>
+              </div>
+              <span class="miller-chevron">›</span>
+            </div>
+          </div>
+
+          <!-- Column 3: 컨퍼런스 이름 -->
+          <div class="miller-col" id="col-conferences">
+            <div class="miller-col-label">3단계: 컨퍼런스 이름</div>
+            <div class="miller-row selected" data-conf="Toss SLASH 26" onclick="selectConf('Toss SLASH 26')">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#32ADE6"/></svg>
+                <span>Toss SLASH 26</span>
+              </div>
+              <span class="miller-chevron">5 ›</span>
+            </div>
+            <div class="miller-row" data-conf="if(kakao)26" onclick="selectConf('if(kakao)26')">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#32ADE6"/></svg>
+                <span>if(kakao)26</span>
+              </div>
+              <span class="miller-chevron">7 ›</span>
+            </div>
+            <div class="miller-row" data-conf="Samsung AI Forum 2026" onclick="selectConf('Samsung AI Forum 2026')">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#32ADE6"/></svg>
+                <span>Samsung AI Forum 26</span>
+              </div>
+              <span class="miller-chevron">4 ›</span>
+            </div>
+            <div class="miller-row" data-conf="ALL" onclick="selectConf('ALL')">
+              <div class="miller-row-left">
+                <svg width="15" height="12" viewBox="0 0 20 16"><path d="M0 3C0 1.89543 0.895431 1 2 1H8L10 3H18C19.1046 3 20 3.89543 20 5V14C20 15.1046 19.1046 16 18 16H2C0.895431 16 0 15.1046 0 14V3Z" fill="#32ADE6"/></svg>
+                <span>전체 컨퍼런스 보기</span>
+              </div>
+              <span class="miller-chevron">16 ›</span>
+            </div>
+          </div>
+
+          <!-- Column 4: 세부 정보 -->
+          <div class="detail-list-col">
+            <div class="miller-col-label" id="col4-header" style="padding-left:2px;">4단계: 세부 정보</div>
+            <div id="col-details-list"></div>
+          </div>
+        </div>
       </div>
-      <div class="desk-icon" onclick="selectConf('Samsung AI Forum 2026')">
-        <div class="desk-icon-glyph">🏛️</div>
-        <div class="desk-icon-label">Samsung AI 26<br>(4 노트)</div>
-      </div>
-      <div class="desk-icon" onclick="openDoc('toss-slash-26-00-overview')">
-        <div class="desk-icon-glyph">🌳</div>
-        <div class="desk-icon-label">Tree Wiki<br>전체 열람</div>
+
+      <!-- Finder Bottom Path & Status Bar -->
+      <div class="finder-statusbar">
+        <div class="path-crumbs">
+          <span style="color:var(--apple-blue);">📁 AI</span>
+          <span>▸</span>
+          <span style="color:var(--apple-blue);">📂 컨퍼런스</span>
+          <span>▸</span>
+          <span id="status-path-conf" style="font-weight:700; color:var(--text-primary);">Toss SLASH 26</span>
+        </div>
+        <div id="status-count">5개 항목 · 클릭하여 트리 위키 열람</div>
       </div>
     </div>
 
-    <!-- Center Finder 4-Column Hierarchy Window -->
-    <div class="finder-window">
-      <div class="finder-titlebar">
-        <div class="traffic-lights">
-          <span class="tl-dot" style="background:#ff5f56;"></span>
-          <span class="tl-dot" style="background:#ffbd2e;"></span>
-          <span class="tl-dot" style="background:#27c93f;"></span>
-        </div>
-        <div style="font-size:13px; font-weight:700; color:var(--text-main);">📂 ArchiveOS Finder — 4단계 계층 탐색기 (AI ➔ 컨퍼런스 ➔ 컨퍼런스 이름 ➔ 세부 정보)</div>
-        <div style="font-size:11.5px; color:var(--text-muted);">Column View</div>
+    <!-- Right-side macOS Desktop Folder Icons -->
+    <div class="desktop-right-aliases">
+      <div class="mac-alias" onclick="selectConf('Toss SLASH 26')">
+        <svg width="54" height="44" viewBox="0 0 54 44" fill="none">
+          <path d="M0 6C0 2.68629 2.68629 0 6 0H18.5C20.4 0 22.1 0.9 23.2 2.4L25.4 5.4H48C51.3137 5.4 54 8.08629 54 11.4V38C54 41.3137 51.3137 44 48 44H6C2.68629 44 0 41.3137 0 38V6Z" fill="#5AC8FA"/>
+          <rect y="8" width="54" height="36" rx="6" fill="url(#deskFolder1)"/>
+          <defs><linearGradient id="deskFolder1" x1="27" y1="8" x2="27" y2="44" gradientUnits="userSpaceOnUse"><stop stop-color="#64D2FF"/><stop offset="1" stop-color="#007AFF"/></linearGradient></defs>
+        </svg>
+        <div class="mac-alias-label">Toss SLASH 26</div>
       </div>
 
-      <div class="finder-path-bar">
-        <span id="finder-current-path">/AI/컨퍼런스/Toss SLASH 26</span>
-        <input type="text" class="finder-search" placeholder="🔍 전체 세션/키워드 실시간 검색..." oninput="searchFinder(this.value)">
+      <div class="mac-alias" onclick="selectConf('if(kakao)26')">
+        <svg width="54" height="44" viewBox="0 0 54 44" fill="none">
+          <path d="M0 6C0 2.68629 2.68629 0 6 0H18.5C20.4 0 22.1 0.9 23.2 2.4L25.4 5.4H48C51.3137 5.4 54 8.08629 54 11.4V38C54 41.3137 51.3137 44 48 44H6C2.68629 44 0 41.3137 0 38V6Z" fill="#5AC8FA"/>
+          <rect y="8" width="54" height="36" rx="6" fill="url(#deskFolder1)"/>
+        </svg>
+        <div class="mac-alias-label">if(kakao)26</div>
       </div>
 
-      <!-- 4-Tier Miller Columns -->
-      <div class="miller-columns">
-        <!-- Column 1: 대분류 (Domain) -->
-        <div class="m-col">
-          <div class="m-col-header">1단계: 대분류</div>
-          <div class="m-item selected"><span>📁 AI</span><span>▸</span></div>
+      <div class="mac-alias" onclick="selectConf('Samsung AI Forum 2026')">
+        <svg width="54" height="44" viewBox="0 0 54 44" fill="none">
+          <path d="M0 6C0 2.68629 2.68629 0 6 0H18.5C20.4 0 22.1 0.9 23.2 2.4L25.4 5.4H48C51.3137 5.4 54 8.08629 54 11.4V38C54 41.3137 51.3137 44 48 44H6C2.68629 44 0 41.3137 0 38V6Z" fill="#5AC8FA"/>
+          <rect y="8" width="54" height="36" rx="6" fill="url(#deskFolder1)"/>
+        </svg>
+        <div class="mac-alias-label">Samsung AI 26</div>
+      </div>
+
+      <div class="mac-alias" onclick="openDoc('toss-slash-26-00-overview')">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="11" fill="#FFFFFF"/>
+          <rect width="48" height="13" rx="4" fill="#FFCC00"/>
+          <line x1="9" y1="22" x2="39" y2="22" stroke="#D1D1D6" stroke-width="2" stroke-linecap="round"/>
+          <line x1="9" y1="30" x2="39" y2="30" stroke="#D1D1D6" stroke-width="2" stroke-linecap="round"/>
+          <line x1="9" y1="38" x2="27" y2="38" stroke="#D1D1D6" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="mac-alias-label">Tree Wiki 노트</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 3. STAGE 2: Apple Developer Docs / Apple Notes Style Tree Wiki View -->
+  <section id="wiki-workspace">
+    <div class="wiki-mac-window">
+      <!-- Unified Window Toolbar -->
+      <div class="finder-toolbar">
+        <div class="ft-left">
+          <div class="traffic-group" onclick="showDesktop()" style="cursor:pointer;" title="데스크탑 Finder로 돌아가기">
+            <span class="tl tl-red"></span>
+            <span class="tl tl-yellow"></span>
+            <span class="tl tl-green"></span>
+          </div>
+          <button onclick="showDesktop()" style="border:0.5px solid var(--divider); background:var(--surface-card); color:var(--text-primary); padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
+            ‹ Finder 데스크탑으로 돌아가기
+          </button>
         </div>
 
-        <!-- Column 2: 중분류 (Section) -->
-        <div class="m-col">
-          <div class="m-col-header">2단계: 중분류</div>
-          <div class="m-item selected"><span>📂 컨퍼런스</span><span>3 ▸</span></div>
+        <div class="segmented-ctrl">
+          <button class="seg-btn" onclick="showDesktop()">계층 컬럼 (Columns)</button>
+          <button class="seg-btn active">트리 위키 (Tree Wiki)</button>
         </div>
 
-        <!-- Column 3: 소분류 (컨퍼런스 이름) -->
-        <div class="m-col" id="col-conferences">
-          <div class="m-col-header">3단계: 컨퍼런스 이름</div>
-          <div class="m-item selected" data-conf="Toss SLASH 26" onclick="selectConf('Toss SLASH 26')">
-            <span>💙 Toss SLASH 26</span><span>5 ▸</span>
-          </div>
-          <div class="m-item" data-conf="if(kakao)26" onclick="selectConf('if(kakao)26')">
-            <span>💛 if(kakao)26</span><span>7 ▸</span>
-          </div>
-          <div class="m-item" data-conf="Samsung AI Forum 2026" onclick="selectConf('Samsung AI Forum 2026')">
-            <span>🏛️ Samsung AI Forum 26</span><span>4 ▸</span>
-          </div>
-          <div class="m-item" data-conf="ALL" onclick="selectConf('ALL')">
-            <span>✨ 전체 컨퍼런스 보기</span><span>16 ▸</span>
-          </div>
+        <div>
+          <button onclick="toggleCloze()" style="border:0.5px solid var(--divider); background:var(--surface-card); color:var(--apple-blue); padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
+            🧠 빈칸 가리기 학습 (Cloze)
+          </button>
         </div>
+      </div>
 
-        <!-- Column 4: 세부 정보 (세션별 학습 요약 노트) -->
-        <div class="m-col" style="border-right:none;">
-          <div class="m-col-header" id="col4-header">4단계: 세부 정보 (클릭 시 트리 위키 열람)</div>
-          <div id="col-details-list"></div>
-        </div>
+      <!-- 2-Column Tree Wiki + Reader -->
+      <div class="wiki-body-grid">
+        <aside class="apple-tree-sidebar">
+          <div style="font-size:11px; font-weight:700; color:var(--text-tertiary); padding:4px 10px 8px;">
+            HIERARCHY TREE WIKI
+          </div>
+          <div id="tree-wiki-nav"></div>
+        </aside>
+
+        <article class="apple-doc-reader">
+          <div class="apple-eyebrow" id="w-crumb"></div>
+          <h1 class="apple-doc-title" id="w-title"></h1>
+          <div class="apple-meta-bar" id="w-meta"></div>
+
+          <div class="apple-callout" id="w-summary"></div>
+
+          <h3 class="apple-section-h3">1. 핵심 아키텍처 및 엔지니어링 포인트</h3>
+          <ul class="apple-list" id="w-points"></ul>
+
+          <h3 class="apple-section-h3">2. 아키텍처 비교 및 정량적 성과</h3>
+          <table class="apple-table" id="w-table"></table>
+
+          <details class="apple-qa-box" open>
+            <summary style="font-weight:700; color:var(--apple-blue); cursor:pointer; font-size:14.5px;">
+              3. 능동적 학습 (Active Recall Q&A)
+            </summary>
+            <p id="w-quiz-q" style="font-weight:700; font-size:14.5px; margin:12px 0 8px; color:var(--text-primary);"></p>
+            <div id="w-quiz-a" style="font-size:14px; color:var(--text-secondary); line-height:1.65;"></div>
+          </details>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- =========================================================================
-       STAGE 2: INNER CONTENT VIEW — 4-TIER TREE WIKI READER
-       ========================================================================= -->
-  <section id="wiki-stage">
-    <!-- Left 4-Tier Collapsible Tree Wiki -->
-    <aside class="wiki-tree-aside">
-      <button class="return-desktop-btn" onclick="showDesktop()">🖥️ 정문 데스크탑(OS)으로 나가기</button>
-      <div style="font-size:11px; font-weight:700; color:var(--text-muted); letter-spacing:0.8px; margin-bottom:10px;">
-        🌳 4-TIER HIERARCHY TREE WIKI
-      </div>
-      <div id="tree-wiki-nav"></div>
-    </aside>
+  <!-- 4. Authentic macOS Floating Glass Dock -->
+  <nav class="mac-dock-container">
+    <!-- Finder App Icon -->
+    <div class="dock-app" data-title="Finder (정문 데스크탑)" onclick="showDesktop()" style="background:linear-gradient(180deg,#5AC8FA 0%,#007AFF 100%);">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 2C12.5 8 12.5 16 14 26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="9" cy="10" r="1.8" fill="white"/>
+        <circle cx="19" cy="10" r="1.8" fill="white"/>
+        <path d="M8 18C10 21 18 21 20 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="dock-dot"></span>
+    </div>
 
-    <!-- Center Learning Document Reader -->
-    <main class="wiki-center-main">
-      <div class="hierarchy-crumb" id="w-crumb"></div>
-      <h1 class="doc-h1" id="w-title"></h1>
-      <div class="doc-meta-row" id="w-meta"></div>
+    <!-- Notes / Tree Wiki App Icon -->
+    <div class="dock-app" data-title="Tree Wiki 노트 열람" onclick="openDoc(currentDoc.id)" style="background:#FFFFFF;">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <rect width="30" height="9" rx="3" fill="#FFCC00"/>
+        <line x1="5" y1="15" x2="25" y2="15" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+        <line x1="5" y1="20" x2="25" y2="20" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+        <line x1="5" y1="25" x2="17" y2="25" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="dock-dot"></span>
+    </div>
 
-      <div class="exec-summary-box" id="w-summary"></div>
+    <div class="dock-divider"></div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="margin:0; font-size:18px; color:var(--text-main);">1. 핵심 아키텍처 및 엔지니어링 포인트</h3>
-        <button onclick="toggleCloze()" style="background:var(--accent-soft); color:var(--accent); border:1px solid var(--col-border); padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
-          🧠 핵심 키워드 가리기 (빈칸 학습 토글)
-        </button>
-      </div>
-      <ul class="key-points-list" id="w-points"></ul>
+    <!-- Toss SLASH 26 Squircle App -->
+    <div class="dock-app" data-title="Toss SLASH 26 (5 노트)" onclick="selectConf('Toss SLASH 26'); showDesktop();" style="background:linear-gradient(145deg,#0064FF,#0040B0); color:#fff; font-weight:800; font-size:13px;">
+      Toss
+    </div>
 
-      <h3 style="font-size:18px; color:var(--text-main); margin-bottom:10px;">2. 아키텍처 비교 및 정량적 성과표</h3>
-      <table class="wiki-table" id="w-table"></table>
+    <!-- if(kakao)26 Squircle App -->
+    <div class="dock-app" data-title="if(kakao)26 (7 노트)" onclick="selectConf('if(kakao)26'); showDesktop();" style="background:#FEE500; color:#191919; font-weight:900; font-size:12px;">
+      kakao
+    </div>
 
-      <details class="recall-card" open>
-        <summary style="font-weight:800; color:var(--accent); cursor:pointer; font-size:15px;">3. 능동적 학습 (Active Recall 셀프 체크 Q&A)</summary>
-        <p id="w-quiz-q" style="font-weight:700; font-size:14.5px; margin:14px 0 10px; color:var(--text-main);"></p>
-        <div id="w-quiz-a" style="background:var(--Quiz-a-bg); border-left:3px solid #10b981; padding:12px 14px; border-radius:6px; color:var(--Quiz-a-text); font-size:13.5px; line-height:1.65;"></div>
-      </details>
-    </main>
-  </section>
+    <!-- Samsung AI Forum Squircle App -->
+    <div class="dock-app" data-title="Samsung AI Forum 26 (4 노트)" onclick="selectConf('Samsung AI Forum 2026'); showDesktop();" style="background:linear-gradient(145deg,#1428A0,#0A155A); color:#fff; font-weight:800; font-size:12px;">
+      AI 26
+    </div>
 
-  <!-- Bottom macOS Dock -->
-  <div class="os-dock">
-    <div class="dock-btn" title="정문 데스크탑 (Home)" onclick="showDesktop()">🖥️</div>
-    <div class="dock-sep"></div>
-    <div class="dock-btn" title="Toss SLASH 26 (5 세션)" onclick="openDoc('toss-slash-26-00-overview')">💙</div>
-    <div class="dock-btn" title="if(kakao)26 (7 세션)" onclick="openDoc('if-kakao-26-00-master')">💛</div>
-    <div class="dock-btn" title="Samsung AI Forum 2026 (4 세션)" onclick="openDoc('samsung-ai-26-00-comprehensive')">🏛️</div>
-    <div class="dock-sep"></div>
-    <div class="dock-btn" title="빈칸 추론 암기 모드 (Cloze)" onclick="toggleCloze()">🧠</div>
-    <div class="dock-btn" id="dock-theme-btn" title="화이트 / 다크 테마 전환" onclick="toggleTheme()">🌙</div>
-  </div>
+    <div class="dock-divider"></div>
+
+    <!-- Appearance Toggle Squircle App -->
+    <div class="dock-app" id="dock-theme-icon" data-title="화이트 / 다크 모드 전환" onclick="toggleTheme()" style="background:linear-gradient(145deg,#3a3a3c,#1c1c1e); color:#fff; font-size:20px;">
+      🌙
+    </div>
+  </nav>
 
   <script>
     const PUBLIC_DOCS = [
@@ -1452,61 +1781,83 @@
     let currentConf = 'Toss SLASH 26';
     let currentDoc = PUBLIC_DOCS[0];
 
+    function updateClock() {
+      const now = new Date();
+      const opts = { month: 'short', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' };
+      document.getElementById('mac-clock').textContent = now.toLocaleDateString('ko-KR', opts);
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
     function toggleTheme() {
       const isDark = document.body.classList.toggle('dark-theme');
       localStorage.setItem('archive_theme', isDark ? 'dark' : 'light');
-      updateThemeButtons(isDark);
+      syncThemeUI(isDark);
     }
 
-    function updateThemeButtons(isDark) {
-      const topBtn = document.getElementById('theme-btn');
-      const dockBtn = document.getElementById('dock-theme-btn');
+    function syncThemeUI(isDark) {
+      const pill = document.getElementById('theme-pill-btn');
+      const dockIcon = document.getElementById('dock-theme-icon');
       if (isDark) {
-        topBtn.innerHTML = '☀️ 화이트 테마로 전환 (현재: 다크)';
-        dockBtn.textContent = '☀️';
+        pill.innerHTML = '☀️ 라이트 모드';
+        dockIcon.textContent = '☀️';
       } else {
-        topBtn.innerHTML = '🌙 다크 테마로 전환 (현재: 화이트)';
-        dockBtn.textContent = '🌙';
+        pill.innerHTML = '🌙 다크 모드';
+        dockIcon.textContent = '🌙';
       }
     }
 
-    // Load saved theme preference (default = eye-comfort White theme)
     (function initTheme() {
       const saved = localStorage.getItem('archive_theme');
       if (saved === 'dark') {
         document.body.classList.add('dark-theme');
-        updateThemeButtons(true);
+        syncThemeUI(true);
       } else {
-        updateThemeButtons(false);
+        syncThemeUI(false);
       }
     })();
 
     function renderFinderDetails(docsList, label) {
-      document.getElementById('finder-current-path').textContent = `/AI/컨퍼런스/${label}`;
-      document.getElementById('col4-header').textContent = `4단계: 세부 정보 (${docsList.length}개 노트 · 클릭 시 트리 위키 열람)`;
+      document.getElementById('finder-header-title').textContent = `AI ▸ 컨퍼런스 ▸ ${label}`;
+      document.getElementById('status-path-conf').textContent = label;
+      document.getElementById('status-count').textContent = `${docsList.length}개 항목 · 클릭하여 트리 위키 열람`;
+      document.getElementById('col4-header').textContent = `4단계: 세부 정보 (${docsList.length})`;
+
       const container = document.getElementById('col-details-list');
       container.innerHTML = docsList.map(d => `
-        <div class="m-detail-card" onclick="openDoc('${d.id}')">
-          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--accent); font-weight:600; font-family:'JetBrains Mono',monospace; margin-bottom:4px;">
-            <span>AI &gt; 컨퍼런스 &gt; ${d.conf_name}</span>
+        <div class="mac-note-card" onclick="openDoc('${d.id}')">
+          <div class="mnc-top">
+            <span>AI ▸ 컨퍼런스 ▸ ${d.conf_name}</span>
             <span>${d.date}</span>
           </div>
-          <div style="font-size:14.5px; font-weight:700; color:var(--text-main); margin-bottom:6px;">📄 ${d.title}</div>
-          <div style="font-size:12.5px; color:var(--text-sub); line-height:1.5; margin-bottom:8px;">${d.summary}</div>
-          <div style="display:inline-block; font-size:11.5px; color:var(--kpi-color); background:var(--kpi-bg); padding:2px 8px; border-radius:6px; font-weight:700; font-family:'JetBrains Mono',monospace;">⚡ 핵심 KPI: ${d.kpi}</div>
+          <div class="mnc-title">
+            <svg width="14" height="16" viewBox="0 0 14 16" fill="none" style="flex-shrink:0;">
+              <path d="M2 0H9L14 5V14C14 15.1 13.1 16 12 16H2C0.9 16 0 15.1 0 14V2C0 0.9 0.9 0 2 0Z" fill="#007AFF" fill-opacity="0.15"/>
+              <path d="M8 0L14 6H9C8.45 6 8 5.55 8 5V0Z" fill="#007AFF"/>
+            </svg>
+            <span>${d.title}</span>
+          </div>
+          <div class="mnc-summary">${d.summary}</div>
+          <div class="mnc-badge">⚡ ${d.kpi}</div>
         </div>
       `).join('');
     }
 
     function selectConf(confName) {
       currentConf = confName;
-      document.querySelectorAll('#col-conferences .m-item').forEach(el => {
+      document.querySelectorAll('#col-conferences .miller-row').forEach(el => {
         el.classList.toggle('selected', el.getAttribute('data-conf') === confName);
       });
+      document.querySelectorAll('.finder-sidebar .fs-row').forEach(el => el.classList.remove('active'));
+      if (confName === 'ALL') document.getElementById('fav-all')?.classList.add('active');
+      if (confName === 'Toss SLASH 26') document.getElementById('fav-toss')?.classList.add('active');
+      if (confName === 'if(kakao)26') document.getElementById('fav-kakao')?.classList.add('active');
+      if (confName === 'Samsung AI Forum 2026') document.getElementById('fav-samsung')?.classList.add('active');
+
       const filtered = confName === 'ALL'
         ? PUBLIC_DOCS
         : PUBLIC_DOCS.filter(d => d.conf_name === confName);
-      renderFinderDetails(filtered, confName);
+      renderFinderDetails(filtered, confName === 'ALL' ? '모든 컨퍼런스' : confName);
     }
 
     function searchFinder(query) {
@@ -1521,7 +1872,7 @@
         d.tags.join(' ').toLowerCase().includes(q) ||
         d.kpi.toLowerCase().includes(q)
       );
-      renderFinderDetails(matched, `검색결과: "${query}"`);
+      renderFinderDetails(matched, `검색: "${query}"`);
     }
 
     function buildTreeWikiSidebar() {
@@ -1529,53 +1880,60 @@
       const confHtml = confGroups.map(cname => {
         const items = PUBLIC_DOCS.filter(d => d.conf_name === cname);
         const leaves = items.map(d => `
-          <a class="tree-leaf" id="leaf-${d.id}" onclick="openDoc('${d.id}')">
-            📄 ${d.title}
+          <a class="tree-leaf-item" id="leaf-${d.id}" onclick="openDoc('${d.id}')">
+            ${d.title}
           </a>
         `).join('');
         return `
-          <details class="tree-lvl-3" open>
-            <summary>📂 ${cname} <span style="color:var(--accent); float:right;">${items.length}</span></summary>
-            <div class="tree-lvl-4-list">${leaves}</div>
+          <details class="tree-group-details" open>
+            <summary>
+              <span>📂 ${cname}</span>
+              <span style="font-size:11px; color:var(--text-tertiary);">${items.length}</span>
+            </summary>
+            <div class="tree-nested">${leaves}</div>
           </details>
         `;
       }).join('');
 
       document.getElementById('tree-wiki-nav').innerHTML = `
-        <details class="tree-lvl-1" open>
-          <summary>📁 1단계: AI (대분류)</summary>
-          <details class="tree-lvl-2" open>
-            <summary>📂 2단계: 컨퍼런스 (중분류)</summary>
-            ${confHtml}
-          </details>
+        <details class="tree-group-details" open>
+          <summary><span>📁 AI</span></summary>
+          <div class="tree-nested">
+            <details class="tree-group-details" open>
+              <summary><span>📂 컨퍼런스</span></summary>
+              <div class="tree-nested">${confHtml}</div>
+            </details>
+          </div>
         </details>
       `;
     }
 
     function formatMarkdownBold(text) {
-      return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:var(--accent-soft);padding:2px 6px;border-radius:4px;color:var(--accent);font-weight:600;">$1</code>');
+      return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code style="background:var(--apple-blue-soft);padding:2px 6px;border-radius:5px;color:var(--apple-blue);font-family:var(--font-mono);font-size:13px;">$1</code>');
     }
 
     function openDoc(docId) {
       const doc = PUBLIC_DOCS.find(d => d.id === docId) || PUBLIC_DOCS[0];
       currentDoc = doc;
 
-      document.getElementById('desktop-stage').style.display = 'none';
-      document.getElementById('wiki-stage').style.display = 'grid';
-      document.getElementById('nav-desktop').classList.remove('active');
-      document.getElementById('nav-wiki').classList.add('active');
+      document.getElementById('desktop-workspace').style.display = 'none';
+      document.getElementById('wiki-workspace').style.display = 'block';
+      document.getElementById('menubar-app-title').textContent = 'Notes';
 
-      document.querySelectorAll('.tree-leaf').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tree-leaf-item').forEach(el => el.classList.remove('active'));
       const activeLeaf = document.getElementById('leaf-' + doc.id);
       if (activeLeaf) activeLeaf.classList.add('active');
 
-      document.getElementById('w-crumb').textContent = `${doc.domain} ➔ ${doc.section} ➔ ${doc.conf_name} ➔ ${doc.filename}`;
+      document.getElementById('w-crumb').textContent = `${doc.domain} ▸ ${doc.section} ▸ ${doc.conf_name}`;
       document.getElementById('w-title').textContent = doc.title;
       document.getElementById('w-meta').innerHTML = `
-        <span>🏛️ <strong>컨퍼런스:</strong> ${doc.conf_name}</span>
-        <span>🎙️ <strong>발표자:</strong> ${doc.speaker}</span>
-        <span>📅 <strong>일자:</strong> ${doc.date}</span>
-        <span>⚡ <strong>핵심 성과:</strong> <strong style="color:var(--kpi-color);background:var(--kpi-bg);padding:2px 8px;border-radius:6px;">${doc.kpi}</strong></span>
+        <span><strong>컨퍼런스</strong> ${doc.conf_name}</span>
+        <span>·</span>
+        <span><strong>발표자</strong> ${doc.speaker}</span>
+        <span>·</span>
+        <span><strong>날짜</strong> ${doc.date}</span>
+        <span>·</span>
+        <span class="mnc-badge">⚡ ${doc.kpi}</span>
       `;
       document.getElementById('w-summary').textContent = doc.summary;
       document.getElementById('w-points').innerHTML = doc.key_points.map(pt => `<li>${formatMarkdownBold(pt)}</li>`).join('');
@@ -1592,17 +1950,15 @@
     }
 
     function showDesktop() {
-      document.getElementById('wiki-stage').style.display = 'none';
-      document.getElementById('desktop-stage').style.display = 'grid';
-      document.getElementById('nav-desktop').classList.add('active');
-      document.getElementById('nav-wiki').classList.remove('active');
+      document.getElementById('wiki-workspace').style.display = 'none';
+      document.getElementById('desktop-workspace').style.display = 'grid';
+      document.getElementById('menubar-app-title').textContent = 'Finder';
     }
 
     function toggleCloze() {
       document.body.classList.toggle('cloze-active');
     }
 
-    // Initialize
     buildTreeWikiSidebar();
     selectConf('Toss SLASH 26');
   </script>
