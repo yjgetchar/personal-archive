@@ -309,20 +309,16 @@
     .dock-sep { width: 1px; height: 32px; background: var(--col-border); margin: 0 4px; }
 
     /* =========================================================================
-       STAGE 2: INNER CONTENT VIEW — TREE WIKI & OSMU STUDIO (트리 위키 화면)
+       STAGE 2: INNER CONTENT VIEW — TREE WIKI READER (트리 위키 학습 화면)
        ========================================================================= */
     #wiki-stage {
       display: none;
       margin-top: 38px;
       min-height: calc(100vh - 38px);
-      grid-template-columns: 320px 1fr 330px;
+      grid-template-columns: 320px 1fr;
       background: var(--wiki-bg);
     }
-    @media (max-width: 1150px) {
-      #wiki-stage { grid-template-columns: 280px 1fr; }
-      .wiki-osmu-aside { display: none; }
-    }
-    @media (max-width: 800px) {
+    @media (max-width: 860px) {
       #wiki-stage { grid-template-columns: 1fr; }
     }
 
@@ -388,8 +384,8 @@
 
     /* Center Document Reader */
     .wiki-center-main {
-      padding: 36px 48px 100px;
-      max-width: 920px;
+      padding: 36px 56px 100px;
+      max-width: 980px;
       overflow-y: auto;
     }
     .hierarchy-crumb {
@@ -458,27 +454,6 @@
       background: var(--wiki-sidebar-bg); border: 1px solid var(--col-border);
       border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;
     }
-
-    /* Right OSMU Studio Pane */
-    .wiki-osmu-aside {
-      background: var(--wiki-sidebar-bg);
-      border-left: 1px solid var(--col-border);
-      padding: 22px 16px 90px;
-      overflow-y: auto;
-    }
-    .studio-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .studio-btn {
-      width: 100%; border: none; padding: 10px 12px;
-      border-radius: 8px; font-weight: 700; font-size: 12.5px;
-      cursor: pointer; margin-top: 8px; transition: filter 0.15s;
-    }
-    .studio-btn:hover { filter: brightness(1.08); }
   </style>
 </head>
 <body>
@@ -495,7 +470,6 @@
       <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">
         🌙 다크 테마로 전환 (현재: 화이트)
       </button>
-      <span class="gatekeeper-pill">🛡️ Public 16 · Private 2 Blocked</span>
     </div>
   </header>
 
@@ -521,14 +495,6 @@
         <div class="desk-icon-glyph">🌳</div>
         <div class="desk-icon-label">Tree Wiki<br>전체 열람</div>
       </div>
-      <div class="desk-icon" onclick="openDoc('toss-slash-26-02-grove')">
-        <div class="desk-icon-glyph">🎬</div>
-        <div class="desk-icon-label">OSMU 블로그<br>& 동영상 추출</div>
-      </div>
-      <div class="desk-icon" onclick="alert('🔒 [Private Gatekeeper 작동] publish_pages: false로 설정된 99_Private_Drafts 폴더는 Git Pages 공개 레포지토리에 배포되지 않습니다.')">
-        <div class="desk-icon-glyph">🔐</div>
-        <div class="desk-icon-label">99_Private<br>(배포 차단됨)</div>
-      </div>
     </div>
 
     <!-- Center Finder 4-Column Hierarchy Window -->
@@ -544,7 +510,7 @@
       </div>
 
       <div class="finder-path-bar">
-        <span id="finder-current-path">/Volumes/08.Personal_Archive/AI/컨퍼런스/Toss SLASH 26</span>
+        <span id="finder-current-path">/AI/컨퍼런스/Toss SLASH 26</span>
         <input type="text" class="finder-search" placeholder="🔍 전체 세션/키워드 실시간 검색..." oninput="searchFinder(this.value)">
       </div>
 
@@ -554,15 +520,12 @@
         <div class="m-col">
           <div class="m-col-header">1단계: 대분류</div>
           <div class="m-item selected"><span>📁 AI</span><span>▸</span></div>
-          <div class="m-item" style="opacity:0.5;" onclick="alert('추후 Cloud / Data / Product 등 대분류 확장 시 이 컬럼에 자동 추가됩니다.')"><span>📁 Cloud (예정)</span><span>▸</span></div>
-          <div class="m-item" style="opacity:0.5;" onclick="alert('publish_pages: false 설정으로 Git Pages에서 제외된 영역입니다.')"><span>🔒 Private</span><span>🚫</span></div>
         </div>
 
         <!-- Column 2: 중분류 (Section) -->
         <div class="m-col">
           <div class="m-col-header">2단계: 중분류</div>
           <div class="m-item selected"><span>📂 컨퍼런스</span><span>3 ▸</span></div>
-          <div class="m-item" style="opacity:0.5;" onclick="alert('추후 논문 리뷰, 오픈소스 분석 등 중분류 확장 가능')"><span>📂 논문리뷰 (예정)</span><span>▸</span></div>
         </div>
 
         <!-- Column 3: 소분류 (컨퍼런스 이름) -->
@@ -592,7 +555,7 @@
   </section>
 
   <!-- =========================================================================
-       STAGE 2: INNER CONTENT VIEW — 4-TIER TREE WIKI & OSMU STUDIO
+       STAGE 2: INNER CONTENT VIEW — 4-TIER TREE WIKI READER
        ========================================================================= -->
   <section id="wiki-stage">
     <!-- Left 4-Tier Collapsible Tree Wiki -->
@@ -620,7 +583,7 @@
       </div>
       <ul class="key-points-list" id="w-points"></ul>
 
-      <h3 style="font-size:18px; color:var(--text-main); margin-bottom:10px;">2. 아키텍처 비교 및 정량적 성과표 (No-Image 고밀도 요약)</h3>
+      <h3 style="font-size:18px; color:var(--text-main); margin-bottom:10px;">2. 아키텍처 비교 및 정량적 성과표</h3>
       <table class="wiki-table" id="w-table"></table>
 
       <details class="recall-card" open>
@@ -629,36 +592,6 @@
         <div id="w-quiz-a" style="background:var(--Quiz-a-bg); border-left:3px solid #10b981; padding:12px 14px; border-radius:6px; color:var(--Quiz-a-text); font-size:13.5px; line-height:1.65;"></div>
       </details>
     </main>
-
-    <!-- Right OSMU Content Redistribution Studio -->
-    <aside class="wiki-osmu-aside">
-      <div style="font-size:11px; font-weight:700; color:var(--accent); letter-spacing:1px; margin-bottom:12px;">
-        🚀 2차 목표: OSMU 컨텐츠 재배포 스튜디오
-      </div>
-
-      <div class="studio-box">
-        <div style="font-weight:800; font-size:14px; margin-bottom:6px; color:var(--text-main);">📝 구글 블로거 / 티스토리 포스트</div>
-        <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin:0 0 8px;">
-          이미지 에셋 없이도 가독성이 뛰어난 인라인 CSS 요약 박스 + 비교표 + Q&A가 포함된 블로그 포스팅 HTML을 클립보드에 복사합니다.
-        </p>
-        <button class="studio-btn" style="background:#2563eb; color:#ffffff;" onclick="copyBloggerHtml()">📋 블로거/티스토리 HTML 원클릭 복사</button>
-      </div>
-
-      <div class="studio-box">
-        <div style="font-weight:800; font-size:14px; margin-bottom:6px; color:var(--text-main);">🎬 전체 동영상 자동 생성 패키지</div>
-        <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin:0 0 8px;">
-          TTS 음성 합성용 오프닝/본론/결론 나레이션 대본과 FFmpeg/Remotion 자동 슬라이드 렌더링용 JSON 명세를 복사합니다.
-        </p>
-        <button class="studio-btn" style="background:#7c3aed; color:#ffffff;" onclick="copyVideoJson()">🎬 동영상 대본 & 슬라이드 JSON 복사</button>
-      </div>
-
-      <div id="osmu-toast" style="font-size:12px; color:#059669; font-weight:700; text-align:center; min-height:22px; margin-bottom:12px;"></div>
-
-      <div class="studio-box">
-        <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:8px;">📄 ARCHIVE METADATA (YAML)</div>
-        <pre id="w-yaml" style="margin:0; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-sub); white-space:pre-wrap; line-height:1.5;"></pre>
-      </div>
-    </aside>
   </section>
 
   <!-- Bottom macOS Dock -->
@@ -1549,7 +1482,7 @@
     })();
 
     function renderFinderDetails(docsList, label) {
-      document.getElementById('finder-current-path').textContent = `/Volumes/08.Personal_Archive/AI/컨퍼런스/${label}`;
+      document.getElementById('finder-current-path').textContent = `/AI/컨퍼런스/${label}`;
       document.getElementById('col4-header').textContent = `4단계: 세부 정보 (${docsList.length}개 노트 · 클릭 시 트리 위키 열람)`;
       const container = document.getElementById('col-details-list');
       container.innerHTML = docsList.map(d => `
@@ -1655,15 +1588,6 @@
       document.getElementById('w-quiz-q').textContent = 'Q. ' + doc.quiz_q;
       document.getElementById('w-quiz-a').textContent = 'A. ' + doc.quiz_a;
 
-      document.getElementById('w-yaml').textContent =
-`path: "AI/컨퍼런스/${doc.conf_folder}/${doc.filename}"
-category_path:
-  - AI
-  - 컨퍼런스
-  - ${doc.conf_name}
-publish_pages: true
-tags: ${JSON.stringify(doc.tags)}`;
-
       window.scrollTo(0, 0);
     }
 
@@ -1676,64 +1600,6 @@ tags: ${JSON.stringify(doc.tags)}`;
 
     function toggleCloze() {
       document.body.classList.toggle('cloze-active');
-    }
-
-    function copyBloggerHtml() {
-      const rowsHtml = currentDoc.table.map((r, i) => {
-        const bg = i === 0 ? 'background:#1e293b;color:#fff;font-weight:bold;' : 'background:#f8fafc;color:#0f172a;';
-        return `<tr>${r.map(c => `<td style="border:1px solid #cbd5e1;padding:10px;${bg}">${c}</td>`).join('')}</tr>`;
-      }).join('');
-      const ptsHtml = currentDoc.key_points.map(p => `<li style="margin-bottom:8px;">${formatMarkdownBold(p)}</li>`).join('');
-      const snippet = `<!-- 구글 블로거 / 티스토리 즉시 붙여넣기용 HTML -->
-<div style="font-family:'Pretendard',sans-serif;line-height:1.75;color:#1e293b;max-width:780px;margin:0 auto;">
-  <div style="font-size:12px;color:#2563eb;font-weight:700;">AI &gt; 컨퍼런스 &gt; ${currentDoc.conf_name}</div>
-  <h2 style="font-size:24px;border-bottom:2px solid #2563eb;padding-bottom:10px;margin-top:6px;">${currentDoc.title}</h2>
-  <p style="font-size:13px;color:#64748b;"><strong>발표:</strong> ${currentDoc.speaker} | <strong>핵심 성과:</strong> <span style="color:#d97706;font-weight:700;">${currentDoc.kpi}</span></p>
-  <blockquote style="background:#eff6ff;border-left:4px solid #2563eb;padding:16px;margin:18px 0;border-radius:0 8px 8px 0;">${currentDoc.summary}</blockquote>
-  <h3>1. 핵심 아키텍처 요약</h3>
-  <ul>${ptsHtml}</ul>
-  <h3>2. 핵심 비교표</h3>
-  <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;">${rowsHtml}</table>
-  <div style="background:#f0fdf4;border:1px solid #86efac;padding:14px;border-radius:8px;margin-top:18px;">
-    <strong>💡 핵심 Q&A: ${currentDoc.quiz_q}</strong><br>${currentDoc.quiz_a}
-  </div>
-</div>`;
-      navigator.clipboard.writeText(snippet);
-      document.getElementById('osmu-toast').textContent = '✅ 구글 블로거/티스토리 HTML이 복사되었습니다!';
-    }
-
-    function copyVideoJson() {
-      const videoSpec = {
-        video_id: currentDoc.id,
-        hierarchy: ["AI", "컨퍼런스", currentDoc.conf_name, currentDoc.title],
-        resolution: "1920x1080",
-        scenes: [
-          {
-            scene_no: 1,
-            type: "title_card",
-            duration_sec: 12,
-            headline: currentDoc.title,
-            subline: `${currentDoc.conf_name} · ${currentDoc.kpi}`,
-            tts_narration: `안녕하세요! 오늘은 ${currentDoc.conf_name}에서 발표된 ${currentDoc.title}의 핵심 아키텍처를 살펴보겠습니다.`
-          },
-          {
-            scene_no: 2,
-            type: "key_points_board",
-            duration_sec: 35,
-            bullets: currentDoc.key_points,
-            tts_narration: currentDoc.summary
-          },
-          {
-            scene_no: 3,
-            type: "comparison_table",
-            duration_sec: 30,
-            table_data: currentDoc.table,
-            tts_narration: `기존 방식과 비교했을 때 핵심 성과 지표는 ${currentDoc.kpi}에 달합니다. 마지막으로 핵심 질문을 짚어보겠습니다. ${currentDoc.quiz_a}`
-          }
-        ]
-      };
-      navigator.clipboard.writeText(JSON.stringify(videoSpec, null, 2));
-      document.getElementById('osmu-toast').textContent = '🎬 동영상 자동 생성용 대본 & 슬라이드 JSON 복사 완료!';
     }
 
     // Initialize
