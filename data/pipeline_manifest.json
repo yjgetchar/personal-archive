@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-15T02:16:36.113465",
+  "generated_at": "2026-10-15T22:02:01.127389",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
   "public_notes_count": 35,
   "total_tracks_count": 12,
   "private_excluded_count": 2,
-  "total_qna_count": 119,
-  "total_char_count": 336763,
-  "avg_char_per_note": 9621,
+  "total_qna_count": 94,
+  "total_char_count": 232645,
+  "avg_char_per_note": 6647,
   "conferences": {
     "Toss SLASH 26": 5,
     "if(kakao)26": 20,
