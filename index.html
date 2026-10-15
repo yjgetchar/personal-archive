@@ -536,6 +536,11 @@
     .dock-app:hover::after { opacity: 1; }
     .dock-dot { position: absolute; bottom: -5px; width: 4px; height: 4px; border-radius: 50%; background: var(--text-primary); opacity: 0.7; }
     .dock-divider { width: 1px; height: 32px; background: var(--divider); margin: 0 2px; }
+
+    /* 7. ADMIN MODE VISIBILITY GUARD */
+    body:not(.admin-mode) .admin-only {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
@@ -553,13 +558,14 @@
       <span class="mb-item mb-appname" id="menubar-app-title" onclick="showDesktop()">Finder</span>
       <span class="mb-item" onclick="showDesktop()">계층 파인더</span>
       <span class="mb-item" onclick="openDoc(currentDoc.id)">트리 위키 (41세션)</span>
-      <span class="mb-item" onclick="copyMarkdownById(currentDoc.id)" style="color:var(--apple-blue); font-weight:700;">📝 마크다운 복사</span>
+      <span class="mb-item admin-only" onclick="copyMarkdownById(currentDoc.id)" style="color:var(--apple-blue); font-weight:700;">📝 마크다운 복사</span>
       <span class="mb-item" onclick="openGlobalQnaModal()">💬 전체 Q&amp;A 뱅크 (106)</span>
       <span class="mb-item" onclick="openFullTextModal(currentDoc.id)">📄 내용 전문</span>
-      <span class="mb-item" onclick="openStudyRulesModal()">📏 학습 요약 규격 (Rule v3.0)</span>
+      <span class="mb-item admin-only" onclick="openStudyRulesModal()">📏 학습 요약 규격 (Rule v3.0)</span>
     </div>
     <div class="mb-right">
       <button class="mb-pill mb-pill-secondary" onclick="openSpotlightModal()" title="단축키 Cmd+K">🔍 Spotlight (⌘K)</button>
+      <button class="mb-pill mb-pill-secondary" id="admin-pill-btn" onclick="handleAdminButtonClick()" title="관리자 모드 잠금 / 해제">🔒 관리자</button>
       <button class="mb-pill" id="theme-pill-btn" onclick="toggleTheme()">🌙 다크 모드</button>
       <span class="mb-item" id="mac-clock" style="font-weight:600;">10월 15일 (목)</span>
     </div>
@@ -592,7 +598,7 @@
         <div class="segmented-ctrl">
           <button class="seg-btn active" onclick="showDesktop()">5단계 계층 컬럼 (Columns)</button>
           <button class="seg-btn" onclick="openDoc(currentDoc.id)">트리 위키 (Tree Wiki)</button>
-          <button class="seg-btn" onclick="openStudyRulesModal()">📏 요약 규격 (v3.0)</button>
+          <button class="seg-btn admin-only" onclick="openStudyRulesModal()">📏 요약 규격 (v3.0)</button>
           <button class="seg-btn" onclick="openGlobalQnaModal()">전체 Q&amp;A (106)</button>
         </div>
 
@@ -623,8 +629,8 @@
               <span style="font-size:11px; color:var(--text-tertiary);">10</span>
             </div>
 
-            <div class="fs-section-title">학습 규격 &amp; Q&amp;A 허브</div>
-            <div class="fs-row" onclick="openStudyRulesModal()">
+            <div class="fs-section-title">Q&amp;A &amp; 검색 허브</div>
+            <div class="fs-row admin-only" onclick="openStudyRulesModal()">
               <div class="fs-row-left"><span>📏</span><span>학습 요약 규격 (v3.0)</span></div>
               <span style="font-size:10.5px; color:var(--apple-green); font-weight:700;">평균 6,681자</span>
             </div>
@@ -769,7 +775,7 @@
         </svg>
         <div class="mac-alias-label">Samsung AI (10)</div>
       </div>
-      <div class="mac-alias" onclick="openStudyRulesModal()">
+      <div class="mac-alias admin-only" onclick="openStudyRulesModal()">
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
           <rect width="48" height="48" rx="11" fill="#34C759"/>
           <path d="M14 16H34M14 24H34M14 32H26" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
@@ -807,15 +813,15 @@
         <div class="segmented-ctrl">
           <button class="seg-btn" onclick="showDesktop()">5단계 계층 컬럼 (Columns)</button>
           <button class="seg-btn active">트리 위키 (Tree Wiki)</button>
-          <button class="seg-btn" onclick="openStudyRulesModal()">📏 요약 규격 (v3.0)</button>
+          <button class="seg-btn admin-only" onclick="openStudyRulesModal()">📏 요약 규격 (v3.0)</button>
           <button class="seg-btn" onclick="openGlobalQnaModal()">전체 Q&amp;A (106)</button>
         </div>
 
         <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-          <button onclick="copyMarkdownById(currentDoc.id, this)" class="mini-btn mini-btn-md" style="padding:5px 11px; font-size:12px;">
+          <button onclick="copyMarkdownById(currentDoc.id, this)" class="mini-btn mini-btn-md admin-only" style="padding:5px 11px; font-size:12px;">
             📝 마크다운 복사
           </button>
-          <button onclick="downloadMarkdownById(currentDoc.id)" class="mini-btn mini-btn-dl" style="padding:5px 10px; font-size:12px;">
+          <button onclick="downloadMarkdownById(currentDoc.id)" class="mini-btn mini-btn-dl admin-only" style="padding:5px 10px; font-size:12px;">
             ⬇️ .md 저장
           </button>
           <button onclick="openFullTextModal(currentDoc.id)" class="mini-btn mini-btn-full" style="padding:5px 11px; font-size:12px;">
@@ -879,7 +885,7 @@
           <div class="qna-card-list" id="w-qna-list"></div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding:16px 18px; background:var(--surface-subtle); border-radius:10px; border:0.5px solid var(--divider);">
-            <span style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">이 세부 세션 노트를 노션·옵시디언·블로그로 옮기거나 원본 전문을 확인하시겠습니까?</span>
+            <span style="font-size:12.5px; font-weight:600; color:var(--text-secondary);"><span class="admin-only">이 세부 세션 노트를 노션·옵시디언·블로그로 옮기거나 </span>원본 리포트 전문을 확인하시겠습니까?</span>
             <div class="mini-action-group" id="w-bottom-btns"></div>
           </div>
 
@@ -901,13 +907,13 @@
             <button id="btn-mark-done" onclick="toggleStudyDone(currentDoc.id)" style="width:100%; padding:8px 10px; border-radius:8px; border:0.5px solid var(--divider); background:var(--surface-card); color:var(--text-primary); font-size:12px; font-weight:700; cursor:pointer;">
               ⬜ 학습 완료 표시
             </button>
-            <button onclick="copyMarkdownById(currentDoc.id, this)" style="width:100%; padding:8px 10px; border-radius:8px; border:none; background:var(--apple-blue); color:#fff; font-size:12px; font-weight:700; cursor:pointer;">
+            <button class="admin-only" onclick="copyMarkdownById(currentDoc.id, this)" style="width:100%; padding:8px 10px; border-radius:8px; border:none; background:var(--apple-blue); color:#fff; font-size:12px; font-weight:700; cursor:pointer;">
               📝 마크다운 전체 복사
             </button>
-            <button onclick="downloadMarkdownById(currentDoc.id)" style="width:100%; padding:7px 10px; border-radius:8px; border:0.5px solid var(--divider); background:var(--surface-card); color:var(--text-secondary); font-size:11.5px; font-weight:600; cursor:pointer;">
+            <button class="admin-only" onclick="downloadMarkdownById(currentDoc.id)" style="width:100%; padding:7px 10px; border-radius:8px; border:0.5px solid var(--divider); background:var(--surface-card); color:var(--text-secondary); font-size:11.5px; font-weight:600; cursor:pointer;">
               ⬇️ .md 파일 다운로드
             </button>
-            <button onclick="openStudyRulesModal()" style="width:100%; padding:7px 10px; border-radius:8px; border:0.5px solid var(--divider); background:var(--surface-subtle); color:var(--text-secondary); font-size:11.5px; font-weight:600; cursor:pointer;">
+            <button class="admin-only" onclick="openStudyRulesModal()" style="width:100%; padding:7px 10px; border-radius:8px; border:0.5px solid var(--divider); background:var(--surface-subtle); color:var(--text-secondary); font-size:11.5px; font-weight:600; cursor:pointer;">
               📏 학습 요약 규격 보기
             </button>
           </div>
@@ -929,8 +935,8 @@
           <strong id="ft-modal-title" style="font-size:13.5px;">내용 전문 보기</strong>
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <button class="mini-btn mini-btn-md" onclick="copyMarkdownById(currentModalDocId, this)">📝 정제 마크다운 복사</button>
-          <button class="mini-btn mini-btn-full" onclick="copyFullText()">📋 원본 리포트 전문 복사</button>
+          <button class="mini-btn mini-btn-md admin-only" onclick="copyMarkdownById(currentModalDocId, this)">📝 정제 마크다운 복사</button>
+          <button class="mini-btn mini-btn-full admin-only" onclick="copyFullText()">📋 원본 리포트 전문 복사</button>
           <button class="mini-btn mini-btn-full" onclick="closeFullTextModal()">✕ 닫기 (ESC)</button>
         </div>
       </div>
@@ -952,7 +958,7 @@
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <input type="text" id="global-qna-search" class="mac-search-input" placeholder="Q&amp;A 검색 (예: Rust, LoRA, MCP, CDC)" oninput="renderGlobalQnaList()" style="width:220px;">
-          <button class="mini-btn mini-btn-md" onclick="copyAllQnaMarkdown()">📝 전체 Q&amp;A 마크다운 복사</button>
+          <button class="mini-btn mini-btn-md admin-only" onclick="copyAllQnaMarkdown()">📝 전체 Q&amp;A 마크다운 복사</button>
           <button class="mini-btn mini-btn-full" onclick="closeGlobalQnaModal()">✕ 닫기 (ESC)</button>
         </div>
       </div>
@@ -998,7 +1004,34 @@
     </div>
   </div>
 
-  <!-- 8. macOS Floating Glass Dock -->
+  <!-- 8. Admin Mode Password Modal (관리자 모드 잠금 해제 모달) -->
+  <div class="fulltext-modal-backdrop" id="admin-auth-modal" onclick="if(event.target===this) closeAdminAuthModal()">
+    <div class="fulltext-sheet" style="max-width:400px;">
+      <div class="ft-sheet-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="traffic-group" onclick="closeAdminAuthModal()" style="cursor:pointer;">
+            <span class="tl tl-red"></span>
+            <span class="tl tl-yellow"></span>
+            <span class="tl tl-green"></span>
+          </div>
+          <strong style="font-size:13.5px;">🔐 관리자 모드 잠금 해제</strong>
+        </div>
+        <button class="mini-btn mini-btn-full" onclick="closeAdminAuthModal()">✕</button>
+      </div>
+      <div class="ft-sheet-body" style="padding:22px 24px; white-space:normal;">
+        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:14px; line-height:1.55;">
+          관리자 전용 기능(<strong>학습 요약 규격 · 마크다운 복사 · .md 다운로드</strong>)을 표시하려면 관리자 비밀번호를 입력하세요.
+        </div>
+        <input type="password" id="admin-pw-input" class="mac-search-input" placeholder="관리자 비밀번호 입력" onkeydown="if(event.key==='Enter') submitAdminPassword()" style="width:100%; padding:9px 12px; font-size:14px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button class="mini-btn mini-btn-full" onclick="closeAdminAuthModal()" style="padding:6px 14px; font-size:12.5px;">취소</button>
+          <button class="mini-btn mini-btn-md" onclick="submitAdminPassword()" style="padding:6px 16px; font-size:12.5px; background:var(--apple-blue); color:#fff;">잠금 해제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. macOS Floating Glass Dock -->
   <nav class="mac-dock-container">
     <div class="dock-app" data-title="Finder (5단계 계층 데스크탑)" onclick="showDesktop()" style="background:linear-gradient(180deg,#5AC8FA 0%,#007AFF 100%);">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -1020,11 +1053,11 @@
       <span class="dock-dot"></span>
     </div>
 
-    <div class="dock-app" data-title="현재 노트 마크다운 복사" onclick="copyMarkdownById(currentDoc.id)" style="background:linear-gradient(145deg,#34C759,#248A3D); color:#fff; font-weight:800; font-size:12px;">
+    <div class="dock-app admin-only" data-title="현재 노트 마크다운 복사" onclick="copyMarkdownById(currentDoc.id)" style="background:linear-gradient(145deg,#34C759,#248A3D); color:#fff; font-weight:800; font-size:12px;">
       MD복사
     </div>
 
-    <div class="dock-app" data-title="학습 요약 규격 (Rule v3.0)" onclick="openStudyRulesModal()" style="background:linear-gradient(145deg,#FF9500,#FF6B00); color:#fff; font-weight:800; font-size:11.5px;">
+    <div class="dock-app admin-only" data-title="학습 요약 규격 (Rule v3.0)" onclick="openStudyRulesModal()" style="background:linear-gradient(145deg,#FF9500,#FF6B00); color:#fff; font-weight:800; font-size:11.5px;">
       규격v3
     </div>
 
@@ -5406,6 +5439,78 @@
       }
     })();
 
+    // Admin Mode (Password: 148148)
+    const ADMIN_PASSWORD = '148148';
+
+    function isAdminMode() {
+      return document.body.classList.contains('admin-mode');
+    }
+
+    function syncAdminModeUI(enabled) {
+      const btn = document.getElementById('admin-pill-btn');
+      if (enabled) {
+        document.body.classList.add('admin-mode');
+        if (btn) {
+          btn.innerHTML = '🔓 관리자 ON';
+          btn.style.background = 'var(--apple-green-soft)';
+          btn.style.color = 'var(--apple-green)';
+        }
+      } else {
+        document.body.classList.remove('admin-mode');
+        if (btn) {
+          btn.innerHTML = '🔒 관리자';
+          btn.style.background = '';
+          btn.style.color = '';
+        }
+      }
+    }
+
+    function handleAdminButtonClick() {
+      if (isAdminMode()) {
+        sessionStorage.removeItem('archive_admin_mode');
+        syncAdminModeUI(false);
+        closeStudyRulesModal();
+        showToast('🔒 관리자 모드가 해제되어 내부 관리 메뉴가 숨겨졌습니다.');
+      } else {
+        openAdminAuthModal();
+      }
+    }
+
+    function openAdminAuthModal() {
+      document.getElementById('admin-auth-modal').classList.add('open');
+      const inp = document.getElementById('admin-pw-input');
+      if (inp) {
+        inp.value = '';
+        setTimeout(() => inp.focus(), 50);
+      }
+    }
+
+    function closeAdminAuthModal() {
+      document.getElementById('admin-auth-modal').classList.remove('open');
+    }
+
+    function submitAdminPassword() {
+      const inp = document.getElementById('admin-pw-input');
+      const val = (inp ? inp.value : '').trim();
+      if (val === ADMIN_PASSWORD) {
+        sessionStorage.setItem('archive_admin_mode', '1');
+        syncAdminModeUI(true);
+        closeAdminAuthModal();
+        showToast('🔓 관리자 모드가 활성화되었습니다! (학습 요약 규격 · 마크다운 복사 · 다운로드 표시)');
+      } else {
+        showToast('❌ 관리자 비밀번호가 올바르지 않습니다.');
+        if (inp) {
+          inp.value = '';
+          inp.focus();
+        }
+      }
+    }
+
+    (function initAdminMode() {
+      const saved = sessionStorage.getItem('archive_admin_mode') === '1';
+      syncAdminModeUI(saved);
+    })();
+
     // Study completion tracking in localStorage
     function getDoneSet() {
       try {
@@ -5455,8 +5560,12 @@
       buildTreeWikiSidebar();
     }
 
-    // Copy as Markdown & Download .md
+    // Copy as Markdown & Download .md (Admin Mode Guarded)
     function copyMarkdownById(docId, btnEl) {
+      if (!isAdminMode()) {
+        openAdminAuthModal();
+        return;
+      }
       const doc = PUBLIC_DOCS.find(d => d.id === docId) || currentDoc;
       const md = doc.clean_markdown || doc.full_text || doc.summary;
       navigator.clipboard.writeText(md).then(() => {
@@ -5470,6 +5579,10 @@
     }
 
     function downloadMarkdownById(docId) {
+      if (!isAdminMode()) {
+        openAdminAuthModal();
+        return;
+      }
       const doc = PUBLIC_DOCS.find(d => d.id === docId) || currentDoc;
       const md = doc.clean_markdown || doc.full_text || '';
       const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
@@ -5517,7 +5630,7 @@
           <span>동영상</span>
         </a>`;
       }
-      html += `<button class="mini-btn mini-btn-md" onclick="event.stopPropagation(); copyMarkdownById('${doc.id}', this)" title="이 페이지 전체를 마크다운(Markdown) 형식으로 클립보드에 복사">
+      html += `<button class="mini-btn mini-btn-md admin-only" onclick="event.stopPropagation(); copyMarkdownById('${doc.id}', this)" title="이 페이지 전체를 마크다운(Markdown) 형식으로 클립보드에 복사">
         <span>📝 마크다운 복사</span>
       </button>`;
       html += `<button class="mini-btn mini-btn-full" onclick="event.stopPropagation(); openFullTextModal('${doc.id}')" title="원본 리포트 및 세션 내용 전문 보기">
@@ -5855,7 +5968,7 @@
           <span><strong>일자</strong> ${doc.date}</span>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-          <span class="mnc-track-pill">⏱️ ${doc.duration || '30분'} · ${charCount}자 (Rule v3.0)</span>
+          <span class="mnc-track-pill">⏱️ ${doc.duration || '30분'} · ${charCount}자<span class="admin-only"> (Rule v3.0)</span></span>
           <span class="mnc-qna-pill">💬 Q&amp;A ${qnaItems.length}건</span>
         </div>
       `;
@@ -5931,13 +6044,21 @@
     }
 
     function copyFullText() {
+      if (!isAdminMode()) {
+        openAdminAuthModal();
+        return;
+      }
       const txt = document.getElementById('ft-modal-body').textContent;
       navigator.clipboard.writeText(txt);
       showToast('📋 원본 리포트 내용 전문이 클립보드에 복사되었습니다!');
     }
 
-    // Study Archiving Rules Modal (v3.0)
+    // Study Archiving Rules Modal (v3.0) — Admin Mode Guarded
     function openStudyRulesModal() {
+      if (!isAdminMode()) {
+        openAdminAuthModal();
+        return;
+      }
       const body = document.getElementById('study-rules-body');
       const confNames = ['Toss SLASH 26', 'if(kakao)26', 'Samsung AI Forum 2026'];
       const statRows = confNames.map(cn => {
@@ -6034,7 +6155,7 @@
               <strong style="font-size:14px; color:var(--apple-blue); cursor:pointer;" onclick="closeGlobalQnaModal(); openDoc('${d.id}')">
                 📄 [${d.conf_name} ▸ ${d.track_name}] ${d.title} (${matchedItems.length})
               </strong>
-              <button class="mini-btn mini-btn-md" onclick="copyMarkdownById('${d.id}', this)">📝 이 세션 MD 복사</button>
+              <button class="mini-btn mini-btn-md admin-only" onclick="copyMarkdownById('${d.id}', this)">📝 이 세션 MD 복사</button>
             </div>
             <div class="qna-card-list">
               ${matchedItems.map((item, idx) => `
@@ -6058,6 +6179,10 @@
     }
 
     function copyAllQnaMarkdown() {
+      if (!isAdminMode()) {
+        openAdminAuthModal();
+        return;
+      }
       let lines = ['# 2026 AI 컨퍼런스(Toss SLASH 26 · if(kakao)26 · Samsung AI Forum 2026) 전 세션 Q&A 총정리\n'];
       PUBLIC_DOCS.forEach(d => {
         lines.push(`## [${d.conf_name} ▸ ${d.track_name}] ${d.title}`);
@@ -6104,7 +6229,7 @@
               <div style="font-size:11px; color:var(--apple-blue); font-weight:700;">${d.conf_name} ▸ ${d.track_name} · ${d.speaker}</div>
               <div style="font-size:13.5px; font-weight:700; color:var(--text-primary);">${d.title}</div>
             </div>
-            <button class="mini-btn mini-btn-md" onclick="event.stopPropagation(); copyMarkdownById('${d.id}', this)">📝 MD 복사</button>
+            <button class="mini-btn mini-btn-md admin-only" onclick="event.stopPropagation(); copyMarkdownById('${d.id}', this)">📝 MD 복사</button>
           </div>
         </div>
       `).join('');
@@ -6116,6 +6241,7 @@
         closeGlobalQnaModal();
         closeStudyRulesModal();
         closeSpotlightModal();
+        closeAdminAuthModal();
       }
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
