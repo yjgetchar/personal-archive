@@ -1,13 +1,18 @@
 {
-  "generated_at": "2026-10-16T21:32:01.420274",
+  "generated_at": "2026-10-16T22:05:36.564732",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
-  "public_notes_count": 41,
-  "total_tracks_count": 13,
+  "public_notes_count": 42,
+  "total_tracks_count": 14,
   "private_excluded_count": 2,
-  "total_qna_count": 106,
-  "total_char_count": 273858,
-  "avg_char_per_note": 6679,
+  "total_qna_count": 109,
+  "total_char_count": 281119,
+  "avg_char_per_note": 6693,
+  "sections": {
+    "컨퍼런스": 41,
+    "Vibe_Cording": 1
+  },
+  "conference_qna_count": 106,
   "conferences": {
     "Toss SLASH 26": 5,
     "if(kakao)26": 26,
