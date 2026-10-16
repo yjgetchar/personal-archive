@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-10-16T11:06:54.242296",
+  "generated_at": "2026-10-16T21:32:01.420274",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
   "public_notes_count": 41,
   "total_tracks_count": 13,
   "private_excluded_count": 2,
   "total_qna_count": 106,
-  "total_char_count": 273854,
+  "total_char_count": 273858,
   "avg_char_per_note": 6679,
   "conferences": {
     "Toss SLASH 26": 5,

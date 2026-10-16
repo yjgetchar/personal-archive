@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="YJ Archive">
+  <path d="M33 17C32 9 37 4 45 3C45 11 40 17 33 17Z" fill="#111"/>
+  <path d="M32 21C25 17 17 17 12 23C3 34 12 55 22 59C26 61 29 57 32 57C36 57 39 61 43 59C49 56 54 47 55 40C48 38 46 32 50 27C45 18 38 18 32 21Z" fill="#111"/>
+  <path d="M18 29L25 38L32 29M25 38V48M35 29H44V42C44 50 35 51 33 44" transform="translate(12 13) scale(.62)" stroke="#555" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
