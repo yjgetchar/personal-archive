@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-17T23:36:29.614495",
+  "generated_at": "2026-11-18T00:14:51.411142",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
   "public_notes_count": 124,
   "total_tracks_count": 24,
-  "private_excluded_count": 36,
+  "private_excluded_count": 42,
   "total_qna_count": 600,
   "session_qna_count": 597,
   "live_qna_count": 32,
