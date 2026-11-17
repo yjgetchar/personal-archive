@@ -386,9 +386,9 @@
       color: var(--text-secondary); text-decoration: none; cursor: pointer; margin-bottom: 2px; line-height: 1.35;
     }
     .tree-leaf-item:hover { background: var(--divider); color: var(--text-primary); }
-    .tree-leaf-item.active { background: var(--apple-blue); color: #ffffff; font-weight: 600; }
+    .tree-leaf-item:is(.active, [aria-current="page"]) { background: var(--apple-blue); color: #ffffff; font-weight: 600; }
     .done-check { font-size: 11px; color: var(--apple-green); flex-shrink: 0; }
-    .tree-leaf-item.active .done-check { color: #fff; }
+    .tree-leaf-item:is(.active, [aria-current="page"]) .done-check { color: #fff; }
 
     .apple-doc-reader { padding: 34px 48px 72px; background: var(--surface-card); overflow-x: hidden; }
     @media (max-width: 700px) { .apple-doc-reader { padding: 24px 18px; } }
@@ -10305,6 +10305,7 @@
       }
       const section = new URLSearchParams(match[2] || '').get('section');
       if (!document.body.classList.contains('reading-note') || currentDoc?.id !== id) renderDoc(id);
+      else if (!section) { focusTreeOnDoc(doc); buildTreeWikiSidebar(); }
       if (section) {
         const target = document.getElementById(section);
         if (target && document.getElementById('note-reader').contains(target)) {
@@ -10657,26 +10658,27 @@
       renderFinderDetails(matched, '검색 결과', `"${query}" (${matched.length}건)`);
     }
 
-    // Persistent Left TOC Sidebar & Tree Node Open/Close State
-    let treeOpenState = (function loadTreeOpenState() {
-      try {
-        return JSON.parse(localStorage.getItem('archive_tree_open_state') || '{}');
-      } catch (e) {
-        return {};
-      }
-    })();
+    // Left TOC Sidebar & Active-Only Tree Node Open/Close State
+    let treeOpenState = {};
+    try { localStorage.removeItem('archive_tree_open_state'); } catch (e) {}
 
     function saveTreeOpenState() {
       try {
-        localStorage.setItem('archive_tree_open_state', JSON.stringify(treeOpenState));
+        localStorage.setItem('archive_tree_open_state_v2', JSON.stringify(treeOpenState));
       } catch (e) {}
+    }
+
+    function focusTreeOnDoc(doc) {
+      treeOpenState = {};
+      activeTreeNodeIds(doc).forEach(id => { treeOpenState[id] = true; });
+      saveTreeOpenState();
     }
 
     function isTreeNodeOpen(treeId) {
       if (Object.prototype.hasOwnProperty.call(treeOpenState, treeId)) {
         return Boolean(treeOpenState[treeId]);
       }
-      return true;
+      return activeTreeNodeIds(currentDoc).has(treeId);
     }
 
     function onTreeDetailsToggle(el) {
@@ -10693,7 +10695,7 @@
         if (tid) treeOpenState[tid] = openBool;
       });
       saveTreeOpenState();
-      showToast(openBool ? '📂 왼쪽 목차 트리를 모두 펼쳤습니다.' : '📁 왼쪽 목차 트리를 모두 접었습니다. 다른 버튼을 눌러도 상태가 유지됩니다.');
+      showToast(openBool ? '📂 왼쪽 목차 트리를 모두 펼쳤습니다.' : '📁 왼쪽 목차 트리를 모두 접었습니다.');
     }
 
     function syncLeftSidebarCollapseUI(isCollapsed) {
@@ -10831,7 +10833,19 @@
       document.getElementById('wiki-workspace').style.display = 'block';
       document.getElementById('menubar-app-title').textContent = 'Notes';
 
+      focusTreeOnDoc(doc);
       updateStudyProgressUI();
+      requestAnimationFrame(() => {
+        const sidebarEl = document.querySelector('.apple-tree-sidebar');
+        const activeLeaf = document.getElementById('leaf-' + doc.id);
+        if (sidebarEl && activeLeaf) {
+          const sRect = sidebarEl.getBoundingClientRect();
+          const lRect = activeLeaf.getBoundingClientRect();
+          if (lRect.top < sRect.top + 40 || lRect.bottom > sRect.bottom - 24) {
+            sidebarEl.scrollTop += (lRect.top - sRect.top) - Math.max(48, sidebarEl.clientHeight * 0.28);
+          }
+        }
+      });
 
       document.getElementById('w-crumb').textContent = `${doc.domain} ▸ ${doc.section} ▸ ${doc.conf_name} ▸ ${doc.track_name}`;
       document.getElementById('w-action-btns').innerHTML = buildCompactButtonsHtml(doc);
@@ -11617,20 +11631,40 @@ function renderReadingHome() {
     ? `${journal ? `<a class="journal-intro" href="${noteHash(journal.id)}" onclick="followNoteLink(event, '${journal.id}')"><span>NEW · AI / Vibe_Cording</span><strong>이 아카이브는 어떻게 만들어졌을까?</strong><span>Gemini에서 Codex까지, Personal Archive 개발일지 읽기 →</span></a>` : ''}${records.length ? `<div class="continue-home"><strong>이어서 공부하기</strong>${records.map(r => { const d = PUBLIC_DOCS.find(d => d.id === r.id); return `<button onclick="resumeReading('${r.id}')">${escapeHtml(d.title)} <span>${Math.round(personalState.reading[r.id].progress * 100)}% →</span></button>`; }).join('')}</div>` : ''}` : '';
 }
 
+function treeSectionId(section) {
+  return section === '컨퍼런스' ? 'root-conf' : 'section-' + section;
+}
+function treeConfId(section, confName) {
+  return 'conf-' + section + '::' + confName;
+}
+function treeTrackId(section, confName, trackFolder) {
+  return 'track-' + section + '::' + confName + '::' + trackFolder;
+}
+function activeTreeNodeIds(doc) {
+  if (!doc) return new Set(['root-ai']);
+  return new Set([
+    'root-ai',
+    treeSectionId(doc.section),
+    treeConfId(doc.section, doc.conf_name),
+    treeTrackId(doc.section, doc.conf_name, doc.track_folder),
+  ]);
+}
+
 function buildTreeWikiSidebar() {
-  document.querySelectorAll('#tree-wiki-nav details[data-tree-id]').forEach(el => { treeOpenState[el.dataset.treeId] = el.open; });
-  saveTreeOpenState();
   const done = getDoneSet();
   const sections = [...new Set(PUBLIC_DOCS.map(d => d.section))];
   const sectionsHtml = sections.map(section => {
-    const sectionId = section === '컨퍼런스' ? 'root-conf' : 'section-' + section;
+    const sectionId = treeSectionId(section);
     const names = [...new Set(PUBLIC_DOCS.filter(d => d.section === section).map(d => d.conf_name))];
     const groups = names.map(name => {
       const docs = PUBLIC_DOCS.filter(d => d.section === section && d.conf_name === name);
-      const confId = 'conf-' + name;
+      const confId = treeConfId(section, name);
       const tracks = getTracksForConf(name, section).map(track => {
-        const tid = 'track-' + name + '-' + track.track_folder;
-        const leaves = docs.filter(d => trackKey(d) === track.key).map(d => `<a class="tree-leaf-item ${currentDoc?.id === d.id ? 'active' : ''}" id="leaf-${d.id}" href="${noteHash(d.id)}" onclick="followNoteLink(event,'${d.id}')"><span>${personalState.bookmarks.includes(d.id) ? '★' : '📄'} ${escapeHtml(d.title)}</span>${done.has(d.id) ? '<span class="done-check">✓</span>' : ''}</a>`).join('');
+        const tid = treeTrackId(section, name, track.track_folder);
+        const leaves = docs.filter(d => trackKey(d) === track.key).map(d => {
+          const isCurrent = currentDoc?.id === d.id;
+          return `<a class="tree-leaf-item ${isCurrent ? 'active' : ''}" ${isCurrent ? 'aria-current="page"' : ''} id="leaf-${d.id}" href="${noteHash(d.id)}" onclick="followNoteLink(event,'${d.id}')"><span>${personalState.bookmarks.includes(d.id) ? '★' : '📄'} ${escapeHtml(d.title)}</span>${done.has(d.id) ? '<span class="done-check">✓</span>' : ''}</a>`;
+        }).join('');
         return `<details class="tree-track-details" data-tree-id="${escapeHtml(tid)}" ${isTreeNodeOpen(tid) ? 'open' : ''} ontoggle="onTreeDetailsToggle(this)"><summary><span>🗂️ ${escapeHtml(track.track_name)}</span><span>${track.count}</span></summary><div class="tree-nested">${leaves}</div></details>`;
       }).join('');
       return `<details class="tree-group-details" data-tree-id="${escapeHtml(confId)}" ${isTreeNodeOpen(confId) ? 'open' : ''} ontoggle="onTreeDetailsToggle(this)"><summary><span>📁 ${escapeHtml(name)}</span><span>${docs.length}</span></summary><div class="tree-nested">${tracks}</div></details>`;
@@ -11694,7 +11728,7 @@ function initPersonalFeatures() {
 }
 
 if (typeof document !== 'undefined') initPersonalFeatures();
-if (typeof module !== 'undefined') module.exports = {filterArchiveDocuments, readingStatus, readPersonalState, isLiveQnaItem, summarizeQnaProvenance};
+if (typeof module !== 'undefined') module.exports = {filterArchiveDocuments, readingStatus, readPersonalState, isLiveQnaItem, summarizeQnaProvenance, activeTreeNodeIds, treeSectionId, treeConfId, treeTrackId};
 
 
     updateStudyProgressUI();
