@@ -1,20 +1,19 @@
 {
-  "generated_at": "2026-11-18T00:18:24.858464",
+  "generated_at": "2026-11-18T00:40:12.827734",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
-  "public_notes_count": 129,
-  "total_tracks_count": 29,
-  "private_excluded_count": 42,
-  "total_qna_count": 610,
-  "session_qna_count": 607,
+  "public_notes_count": 124,
+  "total_tracks_count": 24,
+  "private_excluded_count": 47,
+  "total_qna_count": 600,
+  "session_qna_count": 597,
   "live_qna_count": 32,
-  "study_qna_count": 575,
-  "total_char_count": 1290999,
-  "avg_char_per_note": 10007,
+  "study_qna_count": 565,
+  "total_char_count": 1272064,
+  "avg_char_per_note": 10258,
   "sections": {
     "컨퍼런스": 112,
     "Youtuber": 11,
-    "공식_BP": 5,
     "Vibe_Cording": 1
   },
   "conference_qna_count": 532,
@@ -24,8 +23,6 @@
     "Samsung AI Forum 2026": 10,
     "2026 당근 빌더 밋업": 59,
     "OpenAI DevDay 2026": 9,
-    "AI Engineer (@aiDotEngineer)": 11,
-    "Global AI Labs Official BP": 2,
-    "China AI Labs Official BP": 3
+    "AI Engineer (@aiDotEngineer)": 11
   }
 }
