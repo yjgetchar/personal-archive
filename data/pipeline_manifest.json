@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-11-17T10:24:55.210933",
+  "generated_at": "2026-11-17T10:59:56.885839",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
-  "public_notes_count": 79,
-  "total_tracks_count": 21,
+  "public_notes_count": 115,
+  "total_tracks_count": 22,
   "private_excluded_count": 36,
-  "total_qna_count": 330,
-  "session_qna_count": 327,
+  "total_qna_count": 546,
+  "session_qna_count": 543,
   "live_qna_count": 32,
-  "study_qna_count": 295,
-  "total_char_count": 663268,
-  "avg_char_per_note": 8395,
+  "study_qna_count": 511,
+  "total_char_count": 1090820,
+  "avg_char_per_note": 9485,
   "sections": {
-    "컨퍼런스": 67,
+    "컨퍼런스": 103,
     "Youtuber": 11,
     "Vibe_Cording": 1
   },
-  "conference_qna_count": 262,
+  "conference_qna_count": 478,
   "conferences": {
     "Toss SLASH 26": 5,
     "if(kakao)26": 26,
     "Samsung AI Forum 2026": 10,
-    "2026 당근 빌더 밋업": 17,
+    "2026 당근 빌더 밋업": 53,
     "OpenAI DevDay 2026": 9,
     "AI Engineer (@aiDotEngineer)": 11
   }
