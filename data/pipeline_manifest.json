@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T11:22:09.342566",
+  "generated_at": "2026-11-17T23:36:29.614495",
   "pipeline_version": "3.0.0-hierarchical-deep-study",
   "study_rule_version": "3.0 (Deep-Study & Full Session Hierarchy Standard)",
   "public_notes_count": 124,
@@ -9,8 +9,8 @@
   "session_qna_count": 597,
   "live_qna_count": 32,
   "study_qna_count": 565,
-  "total_char_count": 1271308,
-  "avg_char_per_note": 10252,
+  "total_char_count": 1272064,
+  "avg_char_per_note": 10258,
   "sections": {
     "컨퍼런스": 112,
     "Youtuber": 11,
